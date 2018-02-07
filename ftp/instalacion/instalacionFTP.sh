@@ -1,3 +1,4 @@
+#!/bin/bash
 # Uso para Debian y distribuciones basadas en Debian (hecho con uso preferido
 # para Linux Mint).
 
