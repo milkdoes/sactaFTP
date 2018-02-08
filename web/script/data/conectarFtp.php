@@ -4,6 +4,9 @@ define('FTP_HOST', 'localhost');
 define('FTP_USER', 'sacta');
 define('FTP_PASS', 'Sacta1');
 
+// Definir ruta permitible para archivos.
+define('RUTA_ARCHIVOS', '/archivos/');
+
 // *** Include the class.
 include('ftp_class.php');
 
@@ -20,8 +23,9 @@ if ($conexion) {
 	print_r($ftpObj -> getMessages());
 }
 
-function SubirArchivo($ftpObj, $archivoSubida, $ruta = '/') {
-	$ruta = $ruta . $archivoSubida;
+function SubirArchivo($ftpObj, $archivoSubida, $ruta = RUTA_ARCHIVOS) {
+	$nombreArchivo = basename($archivoSubida);
+	$ruta = $ruta . $nombreArchivo;
 
 	// *** Upload local file to new directory on server.
 	$ftpObj -> uploadFile($archivoSubida, $ruta);

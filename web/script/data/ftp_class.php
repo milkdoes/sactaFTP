@@ -18,7 +18,7 @@ Class FTPClient
 		return $this->messageArray;
 	}
 
-	public function connect ($server, $ftpUser, $ftpPassword, $isPassive = false)
+	public function connect ($server, $ftpUser, $ftpPassword, $isPassive = true)
 	{
 		// *** Set up basic connection
 		$this->connectionId = ftp_connect($server);
@@ -26,7 +26,7 @@ Class FTPClient
 		// *** Login with username and password
 		$loginResult = ftp_login($this->connectionId, $ftpUser, $ftpPassword);
 
-		// *** Sets passive mode on/off (default off)
+		// *** Sets passive mode on/off (default on)
 		ftp_pasv($this->connectionId, $isPassive);
 
 		// *** Check connection
@@ -123,6 +123,13 @@ Class FTPClient
 			$this->logMessage('There was an error downloading file "' . $fileFrom . '" to "' . $fileTo . '"');
 		}
 
+	}
+
+	public function __deconstruct()
+	{
+		if ($this->connectionId) {
+			ftp_close($this->connectionId);
+		}
 	}
 }
 ?>
