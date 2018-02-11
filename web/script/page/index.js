@@ -21,11 +21,14 @@
 				cache: false,
 				contentType: false,
 				processData: false,
-				// Setting the data attribute of ajax with file_data
 				data: dataForma,
 				type: 'post',
-				success: function() {
-					alert("Exito.");
+				success: function(jsonData) {
+					// Procesar datos json.
+					const data = JSON.parse(jsonData);
+
+					// Alertar sobre estatus de subida.
+					alert(data);
 				}
 			});
 		});

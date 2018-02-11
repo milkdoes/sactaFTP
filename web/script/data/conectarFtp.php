@@ -1,4 +1,8 @@
 <?php
+// Alertar todos los errores.
+ini_set('display_errors', true);
+error_reporting(E_ALL);
+
 // *** Define your host, username, and password.
 define('FTP_HOST', 'localhost');
 define('FTP_USER', 'sacta');
@@ -24,11 +28,18 @@ if ($conexion) {
 }
 
 function SubirArchivo($ftpObj, $archivoSubida, $ruta = RUTA_ARCHIVOS) {
+	// Definir exito al subir archivo.
+	$exito = false;
+
+	// Definir parametros para subida de archivo.
 	$nombreArchivo = basename($archivoSubida);
 	$ruta = $ruta . $nombreArchivo;
 
-	// *** Upload local file to new directory on server.
-	$ftpObj -> uploadFile($archivoSubida, $ruta);
+	// Subir archivo a servidor FTP y definir exito.
+	$exito = $ftpObj -> uploadFile($archivoSubida, $ruta);
+
+	// Regresar si la operacion tuvo exito o no.
+	return $exito;
 }
 
 
