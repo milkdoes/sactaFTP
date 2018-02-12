@@ -4,6 +4,7 @@
 
 	// CONSTANTES.
 	window.ARCHIVO_SUBIDA_FTP_ID = "#ArchivoSubidaFtp";
+	window.ARCHIVO_SUBIDA_FTP_TEXTO_ID = "#ArchivoSubidaFtpTexto";
 	window.SUBIR_ARCHIVO_ID = "#SubirArchivo";
 	window.SUBIDA = "script/data/subirArchivo.php";
 
@@ -15,6 +16,7 @@
 			let dataForma = new FormData();
 			dataForma.append("archivo", archivo);
 
+			// Subir archivo con llamada al servidor.
 			$.ajax({
 				url: window.SUBIDA,
 				dataType: 'script',
@@ -29,6 +31,10 @@
 
 					// Alertar sobre estatus de subida.
 					alert(data);
+
+					// Limpiar ingreso para archivo actual.
+					$(window.ARCHIVO_SUBIDA_FTP_ID).val("");
+					$(window.ARCHIVO_SUBIDA_FTP_TEXTO_ID).val("");
 				}
 			});
 		});
