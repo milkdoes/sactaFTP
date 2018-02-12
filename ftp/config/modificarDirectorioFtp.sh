@@ -1,4 +1,12 @@
 #!/bin/bash 
+# Archivo para modificar servidor FTP y directorio en el cual guardar archivos.
+
+# Verificar si usuario es super usuario. Si no salir.
+if [ "$EUID" -ne 0 ]
+	then echo "Por favor correr como superusuario (sudo)."
+	exit
+fi
+
 # Constantes.
 USUARIO=sacta
 CONTRASENA="Sacta1"

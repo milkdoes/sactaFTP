@@ -1,5 +1,12 @@
 #!/bin/bash 
 # Archivo para modificar parametros del servidor web.
+
+# Verificar si usuario es super usuario. Si no salir.
+if [ "$EUID" -ne 0 ]
+	then echo "Por favor correr como superusuario (sudo)."
+	exit
+fi
+
 # Constantes.
 USUARIO=sacta
 CONTRASENA="Sacta1"
