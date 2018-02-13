@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 # Archivo para modificar servidor FTP y directorio en el cual guardar archivos.
 
 # Verificar si usuario es super usuario. Si no salir.
@@ -27,7 +27,8 @@ ufw allow 990/tcp
 ufw allow 40000:50000/tcp
 
 # Agregar usuario.
-useradd -p $(openssl passwd -1 $CONTRASENA) $USUARIO
+useradd -m -s /bin/bash -c "$*" "$USUARIO"
+echo "$USUARIO:$CONTRASENA" | chpasswd
 
 # Crear directorio para archivos en FTP.
 mkdir $DIR_FTP
