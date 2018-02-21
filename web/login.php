@@ -1,3 +1,6 @@
+<?php 
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -13,7 +16,7 @@
 	<body>
 		<div id="header"></div>
 		<h2 class="row center">Inicio de sesi&oacute;n</h2>
-		<form action="script/data/login.php" method="POST">
+		<form action="script/data/loginCheck.php" method="POST">
 			<!-- Usuario y contraseña. -->
 			<div class="row center">
 				<div class="input-field col s6 m6 l6 push-s3 push-m3 push-l3">
@@ -34,6 +37,18 @@
 				  	</button>
 				</div>
 			</div>
+			<?php
+				if (isset($_SESSION['error']))
+				{
+				?>
+				<div class="row center">
+					<div class="card-panel red lighten-1 white-text">Usuario y/o contrase&ntilde;a incorrecta.
+					</div>
+				</div>
+				<?php
+				    unset($_SESSION['error']);
+				}
+			?>
 			<div id="footer"></div>
 		</form>
 		<!-- Scripts. -->
