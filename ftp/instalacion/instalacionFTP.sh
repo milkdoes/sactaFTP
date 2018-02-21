@@ -17,3 +17,6 @@ apt-get install lamp-server^
 
 # Instalar paquetes con uso de **vsftpd**.
 apt-get install vsftpd*
+
+# Instalar paquetes para uso de usuarios virtuales.
+apt-get install libpam-pwdfile
