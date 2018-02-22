@@ -7,24 +7,49 @@ if [ "$EUID" -ne 0 ]
 	exit
 fi
 
-# FUNCIONES.
-# Reemplazar texto en un archivo si existe. Si no, agregarlo al final.
-ReemplazarAgregarTexto() {
-	local textoReemplazar=$1
-	local textoNuevo=$2
-	local archivo=$3
-
-	grep -q "$textoReemplazar" $archivo && sed -i "s/$textoReemplazar/$textoNuevo/" $archivo || echo "$textoNuevo" >> $archivo
-}
-
 # CONSTANTES.
-USUARIO=sacta
-CONTRASENA="Sacta1" 
+USUARIO="vsftpd"
+DIRECTORIO_FTP_USUARIO="/home/$USUARIO/ftp"
+DIRECTORIO_VSFTPD="/etc/vsftpd"
+DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES="/etc/vsftpd_user_conf"
 ARCHIVO_VSFTPD="/etc/vsftpd.conf"
-
+ARCHIVO_USUARIOS_VIRTUALES="textoUsuariosVirtuales.txt"
+ARCHIVO_PAM_VIEJO="/etc/pam.d/vsftpd"
+ARCHIVO_PAM_NUEVO="textoPamVsftpd.txt"
+# Credenciales de usuario ejemplo.
+USUARIO_EJEMPLO="user1"
+CONTRASENA_EJEMPLO="user1"
+DIRECTORIO_EJEMPLO="$DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES/$USUARIO_EJEMPLO"
 
 # PRINCIPAL/MAIN.
-# Configurar para correr como "Standalone".
-STANDALONE_VIEJO=" *#* *listen=\(YES\|NO\).*"
-STANDALONE_NUEVO="listen=YES"
-ReemplazarAgregarTexto "$STANDALONE_VIEJO" "$STANDALONE_NUEVO" "$ARCHIVO_VSFTPD"
+# Agregar configuracion de usuarios virtuales.
+cat $ARCHIVO_USUARIOS_VIRTUALES >> $ARCHIVO_VSFTPD
+
+# Crear directorio de configuracion.
+mkdir $DIRECTORIO_VSFTPD
+
+# Crear archivo para contraseñas.
+htpasswd -c -p -b /etc/vsftpd/ftpd.passwd $USUARIO_EJEMPLO $(openssl passwd -1 -noverify $CONTRASENA_EJEMPLO)
+
+# Sobreborrar archivo de pam.
+cat $ARCHIVO_PAM_NUEVO > $ARCHIVO_PAM_VIEJO
+
+# Crear usuario local para que usuarios virtuales puedan acceder.
+useradd --home /home/$USUARIO --gid nogroup -m --shell /bin/false $USUARIO
+
+# Crear folder por defecto en donde poner archivos.
+mkdir $DIRECTORIO_FTP_USUARIO
+
+# Crear folder de configuracion de usuarios.
+mkdir $DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES
+
+# Crear directorio ejemplo para usuario ejemplo junto con archivo con ruta a
+# directorio ejemplo.
+mkdir $DIRECTORIO_EJEMPLO
+echo "local_root=$DIRECTORIO_EJEMPLO" >> "$DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES/$USUARIO_EJEMPLO"
+
+# Cambiar derechos de escritura a directorio de usuario local para usuario virtuales.
+chown $USUARIO:nogroup $DIRECTORIO_EJEMPLO
+
+# Reiniciar servicio de vsftpd.
+service vsftpd restart

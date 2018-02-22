@@ -1,0 +1,17 @@
+# Configuracion para usuarios virtuales.
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+local_umask=022
+# Directorio por defecto si usuario no tiene carpeta.
+local_root=/home/vsftpd/ftp
+chroot_local_user=YES
+allow_writeable_chroot=YES
+hide_ids=YES
+
+user_config_dir=/etc/vsftpd_user_conf
+guest_enable=YES
+virtual_use_local_privs=YES
+pam_service_name=vsftpd
+nopriv_user=vsftpd
+guest_username=vsftpd
