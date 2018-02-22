@@ -42,7 +42,7 @@ session_start();
 				{
 				?>
 				<div class="row center">
-					<div class="card-panel red lighten-1 white-text">Usuario y/o contrase&ntilde;a incorrecta.
+					<div class="card-panel red lighten-1 white-text"><?php echo $_SESSION['error'] ?>
 					</div>
 				</div>
 				<?php
