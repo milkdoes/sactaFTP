@@ -19,10 +19,11 @@ if($conn_id == false){
 	// intentar iniciar sesión
 	if (@ftp_login($conn_id, $ftp_user, $ftp_pass)) {
 	    //echo "Conectado como $ftp_user@$ftp_server\n";
+	    $_SESSION['ftp_user'] = $ftp_user;
 	    ftp_close($conn_id);
 	    echo '
 		<script>
-		window.location.replace("../../home.html");
+		window.location.replace("../../home.php");
 		</script>
 		';
 	} else {
