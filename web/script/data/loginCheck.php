@@ -23,7 +23,7 @@ if($conn_id == false){
 	    ftp_close($conn_id);
 	    echo '
 		<script>
-		window.location.replace("../../home.php");
+		window.location.replace("../../angular/index.html");
 		</script>
 		';
 	} else {
