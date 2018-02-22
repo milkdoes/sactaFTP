@@ -20,11 +20,11 @@ ReemplazarAgregarTexto() {
 # CONSTANTES.
 USUARIO=sacta
 CONTRASENA="Sacta1" 
-ARCHIVO_VSFTPD="/home/smjm/Documents/vsftpd.conf"
+ARCHIVO_VSFTPD="/etc/vsftpd.conf"
 
-# PRINCIPAL.
+
+# PRINCIPAL/MAIN.
 # Configurar para correr como "Standalone".
 STANDALONE_VIEJO=" *#* *listen=\(YES\|NO\).*"
 STANDALONE_NUEVO="listen=YES"
-
-grep -q "$STANDALONE_VIEJO" $ARCHIVO_VSFTPD && sed -i "s/$STANDALONE_VIEJO/$STANDALONE_NUEVO/" $ARCHIVO_VSFTPD || echo "$STANDALONE_NUEVO" >> $ARCHIVO_VSFTPD
+ReemplazarAgregarTexto "$STANDALONE_VIEJO" "$STANDALONE_NUEVO" "$ARCHIVO_VSFTPD"
