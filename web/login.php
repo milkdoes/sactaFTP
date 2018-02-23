@@ -1,5 +1,8 @@
 <?php 
-session_start();
+// Start session if it has not already started.
+if (session_status() == PHP_SESSION_NONE) {
+	session_start();
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -58,3 +61,22 @@ session_start();
 		<script type="text/javascript" src="script/page/index.js"></script>
 	</body>
 </html>
+<?php
+function DestroySession()
+{
+	// Define if all operations are successful.
+	$sucess = false;
+
+	// Remove all session variables.
+	$success = session_unset();
+
+	// Destroy the session.
+	$success = $success && session_destroy();
+
+	// Return sucess of operations.
+	return $success;
+}
+
+// Destruir sesion.
+DestroySession();
+?>
