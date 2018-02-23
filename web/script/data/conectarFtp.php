@@ -3,13 +3,22 @@
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 
+// Start session if it has not already started.
+if (session_status() == PHP_SESSION_NONE) {
+	session_start();
+}
+
 // *** Define your host, username, and password.
 define('FTP_HOST', 'localhost');
-define('FTP_USER', 'sacta');
-define('FTP_PASS', 'Sacta1');
+define('FTP_USER', "ftp_user");
+define('FTP_PASS', "ftp_pass");
+
+$user = $_SESSION[FTP_USER];
+$password = $_SESSION[FTP_PASS];
 
 // Definir ruta permitible para archivos.
-define('RUTA_ARCHIVOS', '/archivos/');
+// Ruta raiz en configuracion de FTP.
+define('RUTA_ARCHIVOS', "/");
 
 // *** Include the class.
 include('ftp_class.php');
@@ -17,14 +26,14 @@ include('ftp_class.php');
 // *** Create the FTP object.
 $ftpObj = new FTPClient();
 
-$conexion = $ftpObj -> connect(FTP_HOST, FTP_USER, FTP_PASS);
+$conexion = $ftpObj -> connect(FTP_HOST, $user, $password);
 
 // *** Connect.
 if ($conexion) {
 	// *** Then add FTP code here.
-	print_r($ftpObj -> getMessages());
+	$colleccionMensajes = $ftpObj -> getMessages();
 } else {
-	print_r($ftpObj -> getMessages());
+	$colleccionMensajes = $ftpObj -> getMessages();
 }
 
 function SubirArchivo($ftpObj, $archivoSubida, $ruta = RUTA_ARCHIVOS) {

@@ -3,6 +3,11 @@
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 
+// Start session if it has not already started.
+if (session_status() == PHP_SESSION_NONE) {
+	session_start();
+}
+
 Class FTPClient
 {
 	// *** Class variables

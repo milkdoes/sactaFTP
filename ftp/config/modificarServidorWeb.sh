@@ -8,12 +8,14 @@ if [ "$EUID" -ne 0 ]
 fi
 
 # Constantes.
-USUARIO="sacta"
-CONTRASENA="Sacta1"
+USUARIO="vsftpd"
 DIR_FTP="/home/$USUARIO/ftp"
 DIR_TEMP="$DIR_FTP/temp"
 DIR_WEB="$(cd $(pwd)/../../web; pwd)"
 DIR_SITIO_WEB="/var/www/html/sactaftp"
+
+# Crear directorio de ftp (si aun no esta creado).
+mkdir $DIR_FTP
 
 # Crear directorio para archivos temporales.
 mkdir $DIR_TEMP
