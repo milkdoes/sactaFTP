@@ -20,10 +20,11 @@ if($conn_id == false){
 	if (@ftp_login($conn_id, $ftp_user, $ftp_pass)) {
 	    //echo "Conectado como $ftp_user@$ftp_server\n";
 	    $_SESSION['ftp_user'] = $ftp_user;
+	    $_SESSION['ftp_pass'] = $ftp_pass;
 	    ftp_close($conn_id);
 	    echo '
 		<script>
-		window.location.replace("../../angular/index.html");
+		window.location.replace("../../home.php");
 		</script>
 		';
 	} else {
