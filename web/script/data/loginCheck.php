@@ -1,5 +1,9 @@
 <?php 
-session_start();
+// Start session if it has not already started.
+if (session_status() == PHP_SESSION_NONE) {
+	session_start();
+}
+
 $ftp_server = "localhost";
 $ftp_user = filter_var($_POST['usuario'], FILTER_SANITIZE_STRING);
 $ftp_pass = filter_var($_POST['contrasena'], FILTER_SANITIZE_STRING);
@@ -24,7 +28,7 @@ if($conn_id == false){
 	    ftp_close($conn_id);
 	    echo '
 		<script>
-		window.location.replace("../../home.php");
+		window.location.replace("../../index.html");
 		</script>
 		';
 	} else {

@@ -6,6 +6,11 @@ error_reporting(E_ALL);
 // Iniciar captura de despliegue.
 ob_start();
 
+// Start session if it has not already started.
+if (session_status() == PHP_SESSION_NONE) {
+	session_start();
+}
+
 // CONSTANTS.
 define("EXECUTE_FILE", "conectarFtp.php");
 // INPUT VALUES.
@@ -13,7 +18,7 @@ define("EXECUTE_FILE", "conectarFtp.php");
 define("ARCHIVO", "archivo");
 // Ruta de directorio en el cual se estaran los archivos temporalmente antes de
 // subir a servidor FTP.
-define("DIR_TEMPORAL", '/home/sacta/ftp/temp/');
+define("DIR_TEMPORAL", '/home/vsftpd/ftp/temp/');
 
 // MAIN.
 // Obtener datos de archivo.
@@ -47,9 +52,9 @@ if ($subidaWebExitosa) {
 	$mensaje = "Fallo al grabar archivo a folder temporal.";
 }
 
-// Limpiar despliegues.
-ob_end_clean();
+// End, clear and get output capturing.
+$debugOutput = ob_get_flush();
 
 // Desplegar mensaje deseado.
-echo json_encode($mensaje);
+echo $mensaje;
 ?>

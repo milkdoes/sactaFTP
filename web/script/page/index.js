@@ -25,13 +25,10 @@
 				processData: false,
 				data: dataForma,
 				type: 'post',
-				success: function(jsonData) {
-					// Procesar datos json.
-					const data = JSON.parse(jsonData);
-
+				success: function(mensaje) {
 					// Alertar sobre estatus de subida.
-					alert(data);
-
+					alert(mensaje);
+				}, complete: function() {
 					// Limpiar ingreso para archivo actual.
 					$(window.ARCHIVO_SUBIDA_FTP_ID).val("");
 					$(window.ARCHIVO_SUBIDA_FTP_TEXTO_ID).val("");
