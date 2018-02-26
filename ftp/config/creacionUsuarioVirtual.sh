@@ -9,6 +9,7 @@ fi
 
 # CONSTANTES.
 USUARIO_FTP="vsftpd"
+ARCHIVO_CONTRASENAS="/etc/vsftpd/ftpd.passwd"
 DIRECTORIO_FTP_USUARIO="/home/$USUARIO_FTP/ftp"
 DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES="/etc/vsftpd_user_conf"
 
@@ -23,7 +24,12 @@ DIRECTORIO_VIRTUAL="$DIRECTORIO_FTP_USUARIO/$USUARIO_VIRTUAL"
 ARCHIVO_VIRTUAL="$DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES/$USUARIO_VIRTUAL"
 
 # Crear o modificar archivo para contraseñas.
-htpasswd -p -b /etc/vsftpd/ftpd.passwd "$USUARIO_VIRTUAL" $(openssl passwd -1 -noverify "$CONTRASENA_VIRTUAL")
+if [ -f "$ARCHIVO_CONTRASENAS" ]
+then
+	htpasswd -p -b "$ARCHIVO_CONTRASENAS" "$USUARIO_VIRTUAL" $(openssl passwd -1 -noverify "$CONTRASENA_VIRTUAL")
+else
+	htpasswd -c -p -b "$ARCHIVO_CONTRASENAS" "$USUARIO_VIRTUAL" $(openssl passwd -1 -noverify "$CONTRASENA_VIRTUAL")
+fi
 
 # Crear directorio ejemplo para usuario ejemplo junto con archivo con ruta a
 # directorio ejemplo.
