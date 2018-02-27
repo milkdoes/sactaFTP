@@ -1,5 +1,8 @@
 <?php
-session_start();
+// Start session if it has not already started.
+if (session_status() == PHP_SESSION_NONE) {
+	session_start();
+}
 $user = $_SESSION['ftp_user'];
 $pass = $_SESSION['ftp_pass'];
 
@@ -18,15 +21,12 @@ $conexion = $ftpObj -> connect('localhost', $user, $pass);
 //Cambiar directorio
 $dir = "/";
 
-//$dir = "/home/vsftpd/ftp/fer/";
-//$ftpObj->changeDir($dir);
-print_r($ftpObj -> getMessages());
-
 // *** Get folder contents
-$contentsArray = $ftpObj->getDirListing($dir);
+$contentsArray = $ftpObj->getDirListing($dir, '-laF');
  
 // *** Output our array of folder contents
-print_r($contentsArray);
+//print_r($contentsArray);
+
 // close the connection
 //tp_close($conexion);
 
@@ -58,9 +58,11 @@ function human_filesize($bytes, $decimals = 2) {
 				<a class="waves-effect waves-light btn-flat white-text"><i class="material-icons left white-text">file_copy</i>Copiar</a>
 				<a class="waves-effect waves-light btn-flat white-text"><i class="material-icons left white-text">content_paste</i>Pegar</a>
 				<a class="waves-effect waves-light btn-flat white-text"><i class="material-icons left white-text">content_cut</i>Cortar</a>
+				<a class="waves-effect waves-light btn-flat white-text" href="#modal1"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
 
 			</div>
 		</div>
+		<!--Desplegar archivos en directorio actual-->
 		<div>
 		     <table>
 		        <thead>
@@ -79,7 +81,7 @@ function human_filesize($bytes, $decimals = 2) {
 	          			$datos = preg_split('/\s+/', $archivo);
 						?>
 						<tr>
-							<td><?php echo $datos[8] ?></td>
+							<td><?php if(substr($datos[8], -1) == "/"){ echo '<i class="material-icons left gray-text text-darken-1 ">folder</i>'; };echo $datos[8]; ?></td>
 							<td><?php echo human_filesize($datos[4]) ?></td>
 		            		<td><?php echo $datos[5] . ' ' . $datos[6] . ' ' . $datos[7]?></td>
 		            		<td><?php echo $datos[0] ?></td>
@@ -91,21 +93,47 @@ function human_filesize($bytes, $decimals = 2) {
 		    </table>
       	</div>
 
+      	<!--Subir archivo-->
       	<form action="script/data/subir.php" method="post" enctype="multipart/form-data" id="archivo">
       		<div class="file-field input-field">
-			<div class="btn">
-				<span>Archivo</span>
-				<input type="file" name="fileToUpload" id="fileToUpload" onchange="subir()">
+				<div class="btn">
+					<span>Archivo</span>
+					<input type="file" name="fileToUpload" id="fileToUpload" onchange="subir()">
+				</div>
+				<div class="file-path-wrapper">
+					<input type="submit" value="Subir archivo" name="submit" class="btn waves-effect waves-light">
+				</div>
 			</div>
-			<div class="file-path-wrapper">
-				<input type="submit" value="Subir archivo" name="submit" class="btn waves-effect waves-light">
-
-				</button>
-			</div>
-		</div>
-                
                 
         </form>
+
+        <!-- Modals -->
+
+		  <!-- Modal Crear Carpeta -->
+		<div id="modal1" class="modal">
+			<form action="script/data/nuevaCarpeta.php" method="POST">
+			    <div class="modal-content">
+			      	<h4>Crear nueva carpeta</h4>
+			      	<div class="input-field">
+			            <input id="nombreCarpeta" type="text" name="nombreCarpeta" required> 
+			            <label for="nombreCarpeta">Nombre</label>
+			            
+			        </div>
+			        <br>
+			        <div class="input-field">
+			            <input id="dir" type="text" value=<?php echo $dir; ?> name="dir" required>
+			            <label for="dir">Directorio</label>
+			        </div>
+			    </div>
+			    <div class="modal-footer">
+			    	<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
+						<button class="btn waves-effect waves-light" type="submit" name="action">Crear
+				  		</button>
+					</div>
+			      	<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
+			    </div>
+			</form>
+		</div>
 
 		<div id="footer"></div>
 		<!-- Scripts. -->
@@ -117,6 +145,12 @@ function human_filesize($bytes, $decimals = 2) {
 			function subir(){
 				document.getElementById("archivo").submit();
 			}
+
+		  	$(document).ready(function(){
+		    	// the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+		    	$('.modal').modal();
+		  	});
+          
 		</script>
 	</body>
 </html>
