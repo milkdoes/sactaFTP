@@ -3,25 +3,39 @@ session_start();
 $user = $_SESSION['ftp_user'];
 $pass = $_SESSION['ftp_pass'];
 
-// set up basic connection
-$conn_id = ftp_connect('localhost');
-
 // *** Include the class.
 include('script/data/ftp_class.php');
 $ftpObj = new FTPClient();
 
-// login with username and password
-$login_result = ftp_login($conn_id, $user, $pass);
+// *** Create the FTP object.
+$ftpObj = new FTPClient();
 
+$conexion = $ftpObj -> connect('localhost', $user, $pass);
+
+// *** Connect.
+if ($conexion) {
+	// *** Then add FTP code here.
+	$colleccionMensajes = $ftpObj -> getMessages();
+} else {
+	$colleccionMensajes = $ftpObj -> getMessages();
+}
+
+// CONSTANTS.
+define("EXECUTE_FILE", "conectarFtp.php");
+
+// login with username and password
+//$login_result = ftp_login($conexion, $user, $pass);
+
+$dir = "/";
+$ftpObj->changeDir($dir);
 // get the file list for /
-$buff = $ftpObj -> getDirListing('.', '');
-//$buff2 = ftp_n
+$buff = $ftpObj -> getDirListing();
 
 // close the connection
-ftp_close($conn_id);
+//tp_close($conexion);
 
 // output the buffer
-//var_dump($buff);
+var_dump($buff);
 ?>
 <!DOCTYPE html>
 <html>
