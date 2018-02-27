@@ -5,37 +5,36 @@ $pass = $_SESSION['ftp_pass'];
 
 // *** Include the class.
 include('script/data/ftp_class.php');
-$ftpObj = new FTPClient();
 
 // *** Create the FTP object.
 $ftpObj = new FTPClient();
 
+// *** Connect.
 $conexion = $ftpObj -> connect('localhost', $user, $pass);
 
-// *** Connect.
-if ($conexion) {
-	// *** Then add FTP code here.
-	$colleccionMensajes = $ftpObj -> getMessages();
-} else {
-	$colleccionMensajes = $ftpObj -> getMessages();
-}
-
 // CONSTANTS.
-define("EXECUTE_FILE", "conectarFtp.php");
+//define("EXECUTE_FILE", "conectarFtp.php");
 
-// login with username and password
-//$login_result = ftp_login($conexion, $user, $pass);
-
+//Cambiar directorio
 $dir = "/";
-$ftpObj->changeDir($dir);
-// get the file list for /
-$buff = $ftpObj -> getDirListing();
 
+//$dir = "/home/vsftpd/ftp/fer/";
+//$ftpObj->changeDir($dir);
+print_r($ftpObj -> getMessages());
+
+// *** Get folder contents
+$contentsArray = $ftpObj->getDirListing($dir);
+ 
+// *** Output our array of folder contents
+print_r($contentsArray);
 // close the connection
 //tp_close($conexion);
 
-// output the buffer
-var_dump($buff);
+function human_filesize($bytes, $decimals = 2) {
+  $sz = 'BKMGTP';
+  $factor = floor((strlen($bytes) - 1) / 3);
+  return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -67,19 +66,23 @@ var_dump($buff);
 		        <thead>
 		          	<tr>
 		              	<th>Nombre</th>
-		              	<th>Tipo</th>
-		              	<th>Fecha</th>
+		              	<th>Tama&ntilde;o</th>
+		              	<th>&Uacute;ltima modificaci&oacute;n</th>
+		              	<th>Permisos</th>
+
 		          	</tr>
 		        </thead>
 
 		        <tbody>
 	          		<?php 
-	          		foreach($buff as $archivo){
+	          		foreach($contentsArray as $archivo){
+	          			$datos = preg_split('/\s+/', $archivo);
 						?>
 						<tr>
-							<td><?php echo $archivo ?></td>
-		            		<td>?</td>
-		            		<td>?</td>
+							<td><?php echo $datos[8] ?></td>
+							<td><?php echo human_filesize($datos[4]) ?></td>
+		            		<td><?php echo $datos[5] . ' ' . $datos[6] . ' ' . $datos[7]?></td>
+		            		<td><?php echo $datos[0] ?></td>
 	            		</tr>
 						<?php
 					}

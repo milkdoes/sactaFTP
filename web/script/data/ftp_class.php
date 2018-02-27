@@ -106,7 +106,15 @@ Class FTPClient
 	public function getDirListing($directory = '.', $parameters = '-la')
 	{
 		// get contents of the current directory
-		$contentsArray = ftp_nlist($this->connectionId, $parameters . '  ' . $directory);
+		$contentsArray = ftp_nlist($this->connectionId, $parameters . ' ' . $directory);
+
+		return $contentsArray;
+	}
+
+	public function getRawDirListing($directory = '.')
+	{
+		// get contents of the current directory
+		$contentsArray = ftp_rawlist($this->connectionId, $directory);
 
 		return $contentsArray;
 	}
