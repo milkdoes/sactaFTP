@@ -14,6 +14,7 @@ DIRECTORIO_PUBLICO="$DIRECTORIO_FTP_USUARIO/public"
 DIRECTORIO_VSFTPD="/etc/vsftpd"
 DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES="/etc/vsftpd_user_conf"
 ARCHIVO_VSFTPD="/etc/vsftpd.conf"
+ARCHIVO_CONTRASENAS="/etc/vsftpd/ftpd.passwd"
 ARCHIVO_USUARIOS_VIRTUALES="textoUsuariosVirtuales.txt"
 ARCHIVO_PAM_VIEJO="/etc/pam.d/vsftpd"
 ARCHIVO_PAM_NUEVO="textoPamVsftpd.txt"
@@ -31,7 +32,12 @@ cat "$ARCHIVO_USUARIOS_VIRTUALES" >> "$ARCHIVO_VSFTPD"
 mkdir "$DIRECTORIO_VSFTPD"
 
 # Crear o modificar archivo para contraseñas.
-htpasswd -p -b /etc/vsftpd/ftpd.passwd "$USUARIO_EJEMPLO" $(openssl passwd -1 -noverify "$CONTRASENA_EJEMPLO")
+if [ -f "$ARCHIVO_CONTRASENAS" ]
+then
+	htpasswd -p -b "$ARCHIVO_CONTRASENAS" "$USUARIO_VIRTUAL" $(openssl passwd -1 -noverify "$CONTRASENA_VIRTUAL")
+else
+	htpasswd -c -p -b "$ARCHIVO_CONTRASENAS" "$USUARIO_VIRTUAL" $(openssl passwd -1 -noverify "$CONTRASENA_VIRTUAL")
+fi
 
 # Sobreborrar archivo de pam.
 cat "$ARCHIVO_PAM_NUEVO" > "$ARCHIVO_PAM_VIEJO"
