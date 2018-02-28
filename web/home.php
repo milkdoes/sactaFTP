@@ -22,7 +22,7 @@ $conexion = $ftpObj -> connect('localhost', $user, $pass);
 $dir = "/";
 
 // *** Get folder contents
-$contentsArray = $ftpObj->getDirListing($dir, '-laF');
+$contentsArray = $ftpObj->getDirListing($dir, '-laF --group-directories-first');
  
 // *** Output our array of folder contents
 //print_r($contentsArray);
@@ -74,7 +74,6 @@ function human_filesize($bytes, $decimals = 2) {
 
 		          	</tr>
 		        </thead>
-
 		        <tbody>
 	          		<?php 
 	          		foreach($contentsArray as $archivo){
