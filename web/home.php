@@ -22,7 +22,7 @@ $conexion = $ftpObj -> connect('localhost', $user, $pass);
 $dir = "/";
 
 // *** Get folder contents
-$contentsArray = $ftpObj->getDirListing($dir, '-laF --group-directories-first');
+$contentsArray = $ftpObj->getDirListing($dir, '-laF');
  
 // *** Output our array of folder contents
 //print_r($contentsArray);
