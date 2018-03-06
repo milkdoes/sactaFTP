@@ -52,7 +52,6 @@ $pass = $_SESSION['ftp_pass'];
 	<body>
 		<div id="header"></div>
 		<div class="row center card-panel blue-grey darken-2">
-			
 			<div class="input-field col">
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_upload</i>Subir</a>
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_download</i>Descargar</a>
@@ -60,7 +59,6 @@ $pass = $_SESSION['ftp_pass'];
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_paste</i>Pegar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_cut</i>Cortar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal1"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
-
 			</div>
 		</div>
 		<!--Desplegar archivos en directorio actual-->
@@ -80,8 +78,7 @@ $pass = $_SESSION['ftp_pass'];
 				<div class="file-path-wrapper">
 					<input type="submit" value="Subir archivo" name="submit" class="btn waves-effect waves-light">
 				</div>
-			</div>
-                
+			</div>  
         </form>
 
         <!-- Modals -->
@@ -93,8 +90,7 @@ $pass = $_SESSION['ftp_pass'];
 			      	<h4>Crear nueva carpeta</h4>
 			      	<div class="input-field">
 			            <input id="nombreCarpeta" type="text" name="nombreCarpeta" required> 
-			            <label for="nombreCarpeta">Nombre</label>
-			            
+			            <label for="nombreCarpeta">Nombre</label>		            
 			        </div>
 			        <br>
 			        <div class="input-field">
@@ -119,30 +115,38 @@ $pass = $_SESSION['ftp_pass'];
 		<script type="text/javascript" src="script/page/ini.js"></script>
 		<script type="text/javascript" src="script/page/index.js"></script>
 		<script>
-			$(".carpeta").on("click", function (){
-				console.log($(this).attr("id"));
-				var htmlData = $('#divArchivos').html();
-				$.post('script/data/obtenerArchivos.php', {'html': htmlData },function(response){
-			 	 		// response now contains anything echoed from processingscript.php 
-			 	 		dir: $(this).attr("id")
-				});
-				document.getElementById("divArchivos").html = htmlData;
+			// $(".carpeta").on('click', function (){
+			// 	console.log($(this).attr("id"));
+			// 	var htmlData = $('#divArchivos').html();
+			// 	$.post('script/data/obtenerArchivos.php', {'html': htmlData },function(response){
+			//  	 		// response now contains anything echoed from processingscript.php 
+			//  	 		dir: $(this).attr("id")
+			// 	});
+			// 	document.getElementById("divArchivos").html = htmlData;
 
-				// $.post("script/data/obtenerArchivos.php", { dir: $(this).attr("id")}).done(function(data, status){
-				// 	$("#divArchivos").empty();
-				// 	$("#divArchivos").append(data);
-				// });
+			// 	// $.post("script/data/obtenerArchivos.php", { dir: $(this).attr("id")}).done(function(data, status){
+			// 	// 	$("#divArchivos").empty();
+			// 	// 	$("#divArchivos").append(data);
+			// 	// });
+			// });
+
+			$(document).on('click', '.carpeta', function (){
+				console.log($(this).attr("id"));
+				$.post("script/data/obtenerArchivos.php", { dir: $(this).attr("id")}).done(function(data, status){
+					$("#divArchivos").empty();
+					$("#divArchivos").append(data);
+				});
 			});
 
-			function obtenerArchivos(){
-				console.log($(this).attr("id"));
-				var htmlData = $('#divArchivos').html();
-				$.post('script/data/obtenerArchivos.php', {'html': htmlData },function(response){
-			 	 		// response now contains anything echoed from processingscript.php 
-			 	 		dir: $(this).attr("id")
-				});
-				document.getElementById("divArchivos").html = htmlData;
-			}
+			// function obtenerArchivos(){
+			// 	console.log($(this).attr("id"));
+			// 	var htmlData = $('#divArchivos').html();
+			// 	$.post('script/data/obtenerArchivos.php', {'html': htmlData },function(response){
+			//  	 		// response now contains anything echoed from processingscript.php 
+			//  	 		dir: $(this).attr("id")
+			// 	});
+			// 	document.getElementById("divArchivos").html = htmlData;
+			// }
 
 			function subir(){
 				document.getElementById("archivo").submit();

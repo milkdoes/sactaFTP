@@ -20,10 +20,10 @@ $dir = "/";
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if(isset($_POST['dir'])){ 
-		$nuevoDir = $_POST['dir']; 
-		echo $nuevoDir;
+		$dir = "/" . $_POST['dir'];
+    $ftpObj -> changeDir($dir);
+		echo $dir;
 	}
-	echo "las vacas";
 }
 
 // *** Get folder contents
@@ -64,7 +64,7 @@ function human_filesize($bytes, $decimals = 2) {
 				<td>
 					<?php 
 						if(substr($datos[8], -1) == "/"){ //Si el objeto de la lista es una carpeta
-							echo '<a onclick="obtenerArchivos()" class="carpeta" id="' . $datos[8] . '"><i class="material-icons left gray-text text-darken-1 ">folder</i>'; 
+							echo '<a class="carpeta" id="' . $datos[8] . '"><i class="material-icons left gray-text text-darken-1 ">folder</i>'; 
 							echo $datos[8] . '</a>';
 						} else {
 							echo $datos[8];
