@@ -6,35 +6,36 @@ if (session_status() == PHP_SESSION_NONE) {
 $user = $_SESSION['ftp_user'];
 $pass = $_SESSION['ftp_pass'];
 
-// *** Include the class.
-include('script/data/ftp_class.php');
+// // *** Include the class.
+// include('script/data/ftp_class.php');
 
-// *** Create the FTP object.
-$ftpObj = new FTPClient();
+// // *** Create the FTP object.
+// $ftpObj = new FTPClient();
 
-// *** Connect.
-$conexion = $ftpObj -> connect('localhost', $user, $pass);
+// // *** Connect.
+// $conexion = $ftpObj -> connect('localhost', $user, $pass);
 
-// CONSTANTS.
-//define("EXECUTE_FILE", "conectarFtp.php");
+// // CONSTANTS.
+// //define("EXECUTE_FILE", "conectarFtp.php");
 
-//Cambiar directorio
-$dir = "/";
+// //Cambiar directorio
+// $dir = "/";
 
-// *** Get folder contents
-$contentsArray = $ftpObj->getDirListing($dir, '-laF');
+// // *** Get folder contents
+// $contentsArray = $ftpObj->getDirListing($dir, '-laF');
+
+// //Ordenar folders primero, archivos despues
+// function cmp($a, $b) {
+//     return (substr($a, -1) == "/" && substr($b, -1) != "/" || substr($a, 1) > substr($b, 1)) ? -1 : 1;
+// }
+
+// uasort($contentsArray, cmp);
  
-// *** Output our array of folder contents
-//print_r($contentsArray);
+// // *** Output our array of folder contents
+// //print_r($contentsArray);
 
-// close the connection
-//tp_close($conexion);
-
-function human_filesize($bytes, $decimals = 2) {
-  $sz = 'BKMGTP';
-  $factor = floor((strlen($bytes) - 1) / 3);
-  return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
-}
+// // close the connection
+// //tp_close($conexion);
 ?>
 <!DOCTYPE html>
 <html>
@@ -53,43 +54,20 @@ function human_filesize($bytes, $decimals = 2) {
 		<div class="row center card-panel blue-grey darken-2">
 			
 			<div class="input-field col">
-				<a class="waves-effect waves-light btn-flat white-text"><i class="material-icons left white-text">file_upload</i>Subir</a>
-				<a class="waves-effect waves-light btn-flat white-text"><i class="material-icons left white-text">file_download</i>Descargar</a>
-				<a class="waves-effect waves-light btn-flat white-text"><i class="material-icons left white-text">file_copy</i>Copiar</a>
-				<a class="waves-effect waves-light btn-flat white-text"><i class="material-icons left white-text">content_paste</i>Pegar</a>
-				<a class="waves-effect waves-light btn-flat white-text"><i class="material-icons left white-text">content_cut</i>Cortar</a>
-				<a class="waves-effect waves-light btn-flat white-text" href="#modal1"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
+				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_upload</i>Subir</a>
+				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_download</i>Descargar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_copy</i>Copiar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_paste</i>Pegar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_cut</i>Cortar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal1"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
 
 			</div>
 		</div>
 		<!--Desplegar archivos en directorio actual-->
-		<div>
-		     <table>
-		        <thead>
-		          	<tr>
-		              	<th>Nombre</th>
-		              	<th>Tama&ntilde;o</th>
-		              	<th>&Uacute;ltima modificaci&oacute;n</th>
-		              	<th>Permisos</th>
-
-		          	</tr>
-		        </thead>
-		        <tbody>
-	          		<?php 
-	          		foreach($contentsArray as $archivo){
-	          			$datos = preg_split('/\s+/', $archivo);
-						?>
-						<tr>
-							<td><?php if(substr($datos[8], -1) == "/"){ echo '<i class="material-icons left gray-text text-darken-1 ">folder</i>'; };echo $datos[8]; ?></td>
-							<td><?php echo human_filesize($datos[4]) ?></td>
-		            		<td><?php echo $datos[5] . ' ' . $datos[6] . ' ' . $datos[7]?></td>
-		            		<td><?php echo $datos[0] ?></td>
-	            		</tr>
-						<?php
-					}
-	          		?>
-		        </tbody>
-		    </table>
+		<div id="divArchivos">
+		    <?php
+		    	include("script/data/obtenerArchivos.php");
+		    ?>
       	</div>
 
       	<!--Subir archivo-->
@@ -141,6 +119,31 @@ function human_filesize($bytes, $decimals = 2) {
 		<script type="text/javascript" src="script/page/ini.js"></script>
 		<script type="text/javascript" src="script/page/index.js"></script>
 		<script>
+			$(".carpeta").on("click", function (){
+				console.log($(this).attr("id"));
+				var htmlData = $('#divArchivos').html();
+				$.post('script/data/obtenerArchivos.php', {'html': htmlData },function(response){
+			 	 		// response now contains anything echoed from processingscript.php 
+			 	 		dir: $(this).attr("id")
+				});
+				document.getElementById("divArchivos").html = htmlData;
+
+				// $.post("script/data/obtenerArchivos.php", { dir: $(this).attr("id")}).done(function(data, status){
+				// 	$("#divArchivos").empty();
+				// 	$("#divArchivos").append(data);
+				// });
+			});
+
+			function obtenerArchivos(){
+				console.log($(this).attr("id"));
+				var htmlData = $('#divArchivos').html();
+				$.post('script/data/obtenerArchivos.php', {'html': htmlData },function(response){
+			 	 		// response now contains anything echoed from processingscript.php 
+			 	 		dir: $(this).attr("id")
+				});
+				document.getElementById("divArchivos").html = htmlData;
+			}
+
 			function subir(){
 				document.getElementById("archivo").submit();
 			}
@@ -148,8 +151,12 @@ function human_filesize($bytes, $decimals = 2) {
 		  	$(document).ready(function(){
 		    	// the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
 		    	$('.modal').modal();
-		  	});
-          
+
+		    	if($("#divArchivos").text()== ""){
+		    		$("#divArchivos").load("script/data/obtenerArchivos.php");
+		    	}
+				
+		  	});   
 		</script>
 	</body>
 </html>
