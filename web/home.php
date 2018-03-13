@@ -51,7 +51,7 @@ $pass = $_SESSION['ftp_pass'];
 	</head>
 	<body>
 		<div id="header"></div>
-		<div class="row center card-panel blue-grey darken-2">
+		<div class="row center blue-grey darken-2">
 			<div class="input-field col">
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_upload</i>Subir</a>
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_download</i>Descargar</a>
@@ -129,10 +129,22 @@ $pass = $_SESSION['ftp_pass'];
 			// 	// 	$("#divArchivos").append(data);
 			// 	// });
 			// });
-
+			var arrayDirActual = ["/"];
+			var dirActual = "";
 			$(document).on('click', '.carpeta', function (){
-				console.log($(this).attr("id"));
-				$.post("script/data/obtenerArchivos.php", { dir: $(this).attr("id")}).done(function(data, status){
+				dirActual = "";
+				if($(this).attr("id") == "../"){
+					arrayDirActual.pop();
+				}
+				else {
+				arrayDirActual.push($(this).attr("id"));
+				}
+				aLen = arrayDirActual.length;
+				for (i = 0; i < aLen; i++) {
+			    	dirActual += arrayDirActual[i];
+				}
+				console.log(dirActual);
+				$.post("script/data/obtenerArchivos.php", { dir: dirActual }).done(function(data, status){
 					$("#divArchivos").empty();
 					$("#divArchivos").append(data);
 				});
