@@ -20,7 +20,7 @@ $dir = "/";
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if(isset($_POST['dir'])){ 
-		$dir = "/" . $_POST['dir'];
+		$dir = $_POST['dir'];
     $ftpObj -> changeDir($dir);
 		echo $dir;
 	}
@@ -44,6 +44,7 @@ function human_filesize($bytes, $decimals = 2) {
   $factor = floor((strlen($bytes) - 1) / 3);
   return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 }
+
 ?>
 <table>
     <thead>
@@ -59,6 +60,7 @@ function human_filesize($bytes, $decimals = 2) {
   		<?php 
   		foreach($contentsArray as $archivo){
   			$datos = preg_split('/\s+/', $archivo);
+        $datos[8] = implode(" ", array_slice($datos, 8));
 			?>
 			<tr>
 				<td>
@@ -75,7 +77,7 @@ function human_filesize($bytes, $decimals = 2) {
         		<td><?php echo $datos[0] ?></td>
     		</tr>
 			<?php
-		}
+		  }
   		?>
     </tbody>
 </table>
