@@ -117,23 +117,12 @@ $pass = $_SESSION['ftp_pass'];
 		<script type="text/javascript" src="script/plugin/materialize.min.js"></script>
 		<script type="text/javascript" src="script/page/ini.js"></script>
 		<script>
-			// $(".carpeta").on('click', function (){
-			// 	console.log($(this).attr("id"));
-			// 	var htmlData = $('#divArchivos').html();
-			// 	$.post('script/data/obtenerArchivos.php', {'html': htmlData },function(response){
-			//  	 		// response now contains anything echoed from processingscript.php 
-			//  	 		dir: $(this).attr("id")
-			// 	});
-			// 	document.getElementById("divArchivos").html = htmlData;
-
-			// 	// $.post("script/data/obtenerArchivos.php", { dir: $(this).attr("id")}).done(function(data, status){
-			// 	// 	$("#divArchivos").empty();
-			// 	// 	$("#divArchivos").append(data);
-			// 	// });
-			// });
 			var arrayDirActual = ["/"];
 			var arrayElementosChecked = [];
+
+			//Cambiar directorio actual
 			$(document).on('click', '.carpeta', function (){
+				arrayElementosChecked = [];
 				var dirActual = "";
 				if($(this).attr("id") == "../"){
 					arrayDirActual.pop();
@@ -153,6 +142,7 @@ $pass = $_SESSION['ftp_pass'];
 				document.getElementById("dir").value = dirActual;
 			});
 
+			//Agregar/eliminar elementos al array de elementos seleccionados
 			$(document).on('click', '.CBelemento', function (){
 				var dirActual = "";
 				aLen = arrayDirActual.length;
@@ -161,39 +151,25 @@ $pass = $_SESSION['ftp_pass'];
 				for (i = 0; i < aLen; i++) {
 			    	dirActual += arrayDirActual[i];
 				}
-				var stringElementos = '';
-				aLenE = arrayElementosChecked.length;
-
-				//Comprobar si la propiedad checked es ture o false
+				
+				//Comprobar si la propiedad checked es true o false
+				console.log($(this).is(':checked') == true);
 				if($(this).is(':checked') == true){
 					//Agregar elemento/archivo a la lista
 					arrayElementosChecked.push(dirActual + $(this).attr("id"));
 				} else {
 					//Borrar elemento/archivo de la lista
-					for (i = 0; i < aLenE; i++) {
-					    if (arrayElementosChecked[i] === dirActual + $(this).attr("id")) {
-					        arrayElementosChecked.splice(i, 1);
-					        break;
-					    }
-					}
+			        arrayElementosChecked = arrayElementosChecked.filter(e => e !== dirActual + $(this).attr("id"));
+
 				}
-				
 				//Desplegar lista de elementos
+				aLenE = arrayElementosChecked.length;
+				var stringElementos = '';
 				for (i = 0; i < aLenE; i++) {
 			    	stringElementos += arrayElementosChecked[i] + ', ';
 				}
 				console.log(stringElementos);
 			});
-
-			// function obtenerArchivos(){
-			// 	console.log($(this).attr("id"));
-			// 	var htmlData = $('#divArchivos').html();
-			// 	$.post('script/data/obtenerArchivos.php', {'html': htmlData },function(response){
-			//  	 		// response now contains anything echoed from processingscript.php 
-			//  	 		dir: $(this).attr("id")
-			// 	});
-			// 	document.getElementById("divArchivos").html = htmlData;
-			// }
 
 			function subir(){
 				document.getElementById("archivo").submit();
