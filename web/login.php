@@ -58,7 +58,6 @@ if (session_status() == PHP_SESSION_NONE) {
 		<script type="text/javascript" src="script/plugin/jquery.min.js"></script>
 		<script type="text/javascript" src="script/plugin/materialize.min.js"></script>
 		<script type="text/javascript" src="script/page/ini.js"></script>
-		<script type="text/javascript" src="script/page/index.js"></script>
 	</body>
 </html>
 <?php
