@@ -94,7 +94,7 @@ $pass = $_SESSION['ftp_pass'];
 			        </div>
 			        <br>
 			        <div class="input-field">
-			            <input id="dir" type="text" value=<?php echo $dir; ?> name="dir" required>
+			            <input id="dir" type="text" value="/" name="dir" required>
 			            <label for="dir">Directorio</label>
 			        </div>
 			    </div>
@@ -130,9 +130,9 @@ $pass = $_SESSION['ftp_pass'];
 			// 	// });
 			// });
 			var arrayDirActual = ["/"];
-			var dirActual = "";
+			var arrayElementosChecked = [];
 			$(document).on('click', '.carpeta', function (){
-				dirActual = "";
+				var dirActual = "";
 				if($(this).attr("id") == "../"){
 					arrayDirActual.pop();
 				}
@@ -148,6 +148,39 @@ $pass = $_SESSION['ftp_pass'];
 					$("#divArchivos").empty();
 					$("#divArchivos").append(data);
 				});
+				document.getElementById("dir").value = dirActual;
+			});
+
+			$(document).on('click', '.CBelemento', function (){
+				var dirActual = "";
+				aLen = arrayDirActual.length;
+
+				//Armar directorio actual
+				for (i = 0; i < aLen; i++) {
+			    	dirActual += arrayDirActual[i];
+				}
+				var stringElementos = '';
+				aLenE = arrayElementosChecked.length;
+
+				//Comprobar si la propiedad checked es ture o false
+				if($(this).is(':checked') == true){
+					//Agregar elemento/archivo a la lista
+					arrayElementosChecked.push(dirActual + $(this).attr("id"));
+				} else {
+					//Borrar elemento/archivo de la lista
+					for (i = 0; i < aLenE; i++) {
+					    if (arrayElementosChecked[i] === dirActual + $(this).attr("id")) {
+					        arrayElementosChecked.splice(i, 1);
+					        break;
+					    }
+					}
+				}
+				
+				//Desplegar lista de elementos
+				for (i = 0; i < aLenE; i++) {
+			    	stringElementos += arrayElementosChecked[i] + ', ';
+				}
+				console.log(stringElementos);
 			});
 
 			// function obtenerArchivos(){

@@ -49,6 +49,7 @@ function human_filesize($bytes, $decimals = 2) {
 <table>
     <thead>
       	<tr>
+            <th style="width: 1px"></th>
           	<th>Nombre</th>
           	<th>Tama&ntilde;o</th>
           	<th>&Uacute;ltima modificaci&oacute;n</th>
@@ -59,24 +60,30 @@ function human_filesize($bytes, $decimals = 2) {
     <tbody>
   		<?php 
   		foreach($contentsArray as $archivo){
-  			$datos = preg_split('/\s+/', $archivo);
-        $datos[8] = implode(" ", array_slice($datos, 8));
-			?>
-			<tr>
-				<td>
-					<?php 
-						if(substr($datos[8], -1) == "/"){ //Si el objeto de la lista es una carpeta
-							echo '<a class="carpeta" id="' . $datos[8] . '"><i class="material-icons left gray-text text-darken-1 ">folder</i>'; 
-							echo $datos[8] . '</a>';
-						} else {
-							echo $datos[8];
-						}
-					?></td>
-				<td><?php echo human_filesize($datos[4]) ?></td>
-        		<td><?php echo $datos[5] . ' ' . $datos[6] . ' ' . $datos[7]?></td>
-        		<td><?php echo $datos[0] ?></td>
+        $datos = preg_split('/\s+/', $archivo);
+        if($datos[8] != "./"){
+          $datos[8] = implode(" ", array_slice($datos, 8));
+  			?>
+  			<tr>
+          <td>
+            <input type="checkbox" class="filled-in CBelemento" id="<?php echo $datos[8] ?>" />
+            <label for="<?php echo $datos[8] ?>"></label>
+          </td>
+  				<td>
+  					<?php 
+  						if(substr($datos[8], -1) == "/"){ //Si el objeto de la lista es una carpeta
+  							echo '<a class="carpeta" id="' . $datos[8] . '"><i class="material-icons left gray-text text-darken-1 ">folder</i>'; 
+  							echo $datos[8] . '</a>';
+  						} else {
+  							echo $datos[8];
+  						}
+  					?></td>
+				  <td><?php echo human_filesize($datos[4]) ?></td>
+          <td><?php echo $datos[5] . ' ' . $datos[6] . ' ' . $datos[7]?></td>
+        	<td><?php echo $datos[0] ?></td>
     		</tr>
-			<?php
+  			<?php
+        }
 		  }
   		?>
     </tbody>
