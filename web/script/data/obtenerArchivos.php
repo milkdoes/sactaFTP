@@ -22,16 +22,29 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if(isset($_POST['dir'])){ 
 		$dir = $_POST['dir'];
     $ftpObj -> changeDir($dir);
-		echo $dir;
 	}
 }
 
 // *** Get folder contents
 $contentsArray = $ftpObj->getDirListing($dir, '-laF');
 
-//Ordenar folders primero, archivos despues
+//Ordenar folders primero, archivos despues, alfabeticamente
+// function cmp($a, $b) {
+//   return (substr($a, -1) == "/" && substr($b, -1) != "/") ? -1 : 1;
+// }
+
 function cmp($a, $b) {
-    return (substr($a, -1) == "/" && substr($b, -1) != "/" || substr($a, 1) > substr($b, 1)) ? -1 : 1;
+  if(substr($a, -1) == "/" && substr($b, -1) == "/"){
+    $datosA = preg_split('/\s+/', $a);
+    $datosB = preg_split('/\s+/', $b);
+    return ($datosA[8] < $datosB[8]) ? -1 : 1;
+  } else if(substr($a, -1) != "/" && substr($b, -1) == "/"){
+    return 1;
+  } else {
+    $datosA = preg_split('/\s+/', $a);
+    $datosB = preg_split('/\s+/', $b);
+    return ($datosA[8] < $datosB[8]) ? -1 : 1;
+  }
 }
 
 uasort($contentsArray, 'cmp');
@@ -61,13 +74,17 @@ function human_filesize($bytes, $decimals = 2) {
   		<?php 
   		foreach($contentsArray as $archivo){
         $datos = preg_split('/\s+/', $archivo);
-        if($datos[8] != "./"){
-          $datos[8] = implode(" ", array_slice($datos, 8));
+        if(!($datos[8] == "./") && !($datos[8] == "../" && $dir == "/")){
+          $datos[8] = implode(" ", array_slice($datos, 8)); //Juntar las palabras que componen el nombre del archivo o carpeta
   			?>
-  			<tr>
-          <td>
+  			<tr style="padding: 0px">
+          <td><?php 
+          if($datos[8] != "../"){ ?>
             <input type="checkbox" class="filled-in CBelemento" id="<?php echo $datos[8] ?>" />
             <label for="<?php echo $datos[8] ?>"></label>
+          <?php
+          }
+          ?>
           </td>
   				<td>
   					<?php 

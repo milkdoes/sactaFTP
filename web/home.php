@@ -6,36 +6,6 @@ if (session_status() == PHP_SESSION_NONE) {
 $user = $_SESSION['ftp_user'];
 $pass = $_SESSION['ftp_pass'];
 
-// // *** Include the class.
-// include('script/data/ftp_class.php');
-
-// // *** Create the FTP object.
-// $ftpObj = new FTPClient();
-
-// // *** Connect.
-// $conexion = $ftpObj -> connect('localhost', $user, $pass);
-
-// // CONSTANTS.
-// //define("EXECUTE_FILE", "conectarFtp.php");
-
-// //Cambiar directorio
-// $dir = "/";
-
-// // *** Get folder contents
-// $contentsArray = $ftpObj->getDirListing($dir, '-laF');
-
-// //Ordenar folders primero, archivos despues
-// function cmp($a, $b) {
-//     return (substr($a, -1) == "/" && substr($b, -1) != "/" || substr($a, 1) > substr($b, 1)) ? -1 : 1;
-// }
-
-// uasort($contentsArray, cmp);
- 
-// // *** Output our array of folder contents
-// //print_r($contentsArray);
-
-// // close the connection
-// //tp_close($conexion);
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,22 +16,35 @@ $pass = $_SESSION['ftp_pass'];
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<!-- Importar materialize.css-->
 		<link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
+		<link type="text/css" rel="stylesheet" href="css/home.css"/>
 		<!-- Dejar que el navegador sepa que el sitio web está optimizado para dispositivos móviles. -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	</head>
 	<body>
 		<div id="header"></div>
+		<!--Botones de funciones FTP-->
 		<div class="row center blue-grey darken-2">
-			<div class="input-field col">
-				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_upload</i>Subir</a>
+				<form action="script/data/subir.php" method="post" enctype="multipart/form-data" id="archivo">
+					<a class="file-field input-field waves-effect waves-light btn-flat white-text s1">
+						<i class="material-icons left white-text">file_upload</i>Subir
+						<input type="file" name="fileToUpload" id="fileToUpload" onchange="subir()">
+					</a>
+					<input type="hidden" name="dir" value="/" id="dirSubir"/>
+				</form>
+				<!--<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_upload</i>Subir</a>-->
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_download</i>Descargar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_copy</i>Copiar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_paste</i>Pegar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_cut</i>Cortar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal1"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
-			</div>
 		</div>
-		<!--Desplegar archivos en directorio actual-->
+
+		<!-- Directorio actual -->
+		<div class="card-panel grey lighten-5 valign-wrapper" style="height: 10px">
+			<span class="black-text text-darken-2" id="dir">/</span>
+		</div>
+
+		<!--Desplegar lista de archivos del directorio actual-->
 		<div id="divArchivos">
 		    <?php
 		    	include("script/data/obtenerArchivos.php");
@@ -69,19 +52,20 @@ $pass = $_SESSION['ftp_pass'];
       	</div>
 
       	<!--Subir archivo-->
-	<form action="script/data/subir.php" method="post" enctype="multipart/form-data" id="archivo" class="row">
-		<div class="file-field input-field col s12 m8 l8">
-				<div class="btn">
-					<span>Archivo</span>
-					<input type="file" name="fileToUpload" id="fileToUpload" onchange="subir()">
-				</div>
-				<div class="file-path-wrapper">
-					<input class="file-path validate" type="text">
-				</div>
-		</div>
-		<div class="input-field col s12 m4 l4">
-			<input type="submit" value="Subir archivo" name="submit" class="btn waves-effect waves-light">
-		</div>
+		<form action="script/data/subir.php" method="post" enctype="multipart/form-data" class="row">
+			<div class="file-field input-field col s12 m8 l8">
+					<div class="btn">
+						<span>Archivo</span>
+						<input type="file" name="fileToUpload" id="fileToUpload">
+					</div>
+					<div class="file-path-wrapper">
+						<input class="file-path validate" type="text">
+					</div>
+			</div>
+			<div class="input-field col s12 m4 l4">
+				<input type="submit" value="Subir archivo" class="btn waves-effect waves-light">
+			</div>
+			<input type="hidden" name="dir" value="/" id="dirSubir2"/>
         </form>
 
         <!-- Modals -->
@@ -97,8 +81,8 @@ $pass = $_SESSION['ftp_pass'];
 			        </div>
 			        <br>
 			        <div class="input-field">
-			            <input id="dir" type="text" value="/" name="dir" required>
-			            <label for="dir">Directorio</label>
+			            <input id="dirNuevaCarpeta" type="text" value="/" name="dir" required>
+			            <label for="dirNuevaCarpeta">Directorio destino</label>
 			        </div>
 			    </div>
 			    <div class="modal-footer">
@@ -139,7 +123,11 @@ $pass = $_SESSION['ftp_pass'];
 					$("#divArchivos").empty();
 					$("#divArchivos").append(data);
 				});
-				document.getElementById("dir").value = dirActual;
+				document.getElementById("dir").innerHTML = dirActual;
+				//Cambiar los inputs escondidos
+				document.getElementById("dirSubir").value = dirActual;
+				document.getElementById("dirSubir2").value = dirActual;
+				document.getElementById("dirNuevaCarpeta").value = dirActual;
 			});
 
 			//Agregar/eliminar elementos al array de elementos seleccionados
@@ -172,6 +160,15 @@ $pass = $_SESSION['ftp_pass'];
 			});
 
 			function subir(){
+				//Armar string de directorio actual
+				var dirActual = "";
+				aLen = arrayDirActual.length;
+				for (i = 0; i < aLen; i++) {
+			    	dirActual += arrayDirActual[i];
+				}
+				
+				
+				//Hacer submit del form (post)
 				document.getElementById("archivo").submit();
 			}
 

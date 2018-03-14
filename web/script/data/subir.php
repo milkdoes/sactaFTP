@@ -1,38 +1,28 @@
 <?php
-session_start();
-// set up basic connection
-$ftp_server = 'localhost';
-$conn_id = ftp_connect($ftp_server); 
+// Start session if it has not already started.
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+$dir = $_POST['dir'];
 
+echo $dir;
 
-// login with username and password
-$login_result = ftp_login($conn_id, $_SESSION['ftp_user'], $_SESSION['ftp_pass']); 
+$user = $_SESSION['ftp_user'];
+$pass = $_SESSION['ftp_pass'];
 
-// check connection
-if ((!$conn_id) || (!$login_result)) { 
-        echo "FTP connection has failed!";
-        echo "Attempted to connect to $ftp_server for user " . $_SESSION['ftp_user']; 
-        exit; 
-    } else {
-        echo "Connected to $ftp_server, for user " . $_SESSION['ftp_user'];
-    }
+// *** Include the class.
+include('ftp_class.php');
 
-// upload the file
-echo "<br>";
-$destination_file =  $_FILES["fileToUpload"]["name"];
-$source_file = $_FILES["fileToUpload"]["tmp_name"];
-echo $_FILES["fileToUpload"]["tmp_name"];
-$upload = ftp_put($conn_id, $destination_file, $source_file, FTP_BINARY); 
+// *** Create the FTP object.
+$ftpObj = new FTPClient();
 
-// check upload status
-if (!$upload) { 
-        echo "FTP upload has failed!";
-    } else {
-        echo "Uploaded $source_file to $ftp_server as $destination_file";
-    }
+// *** Connect.
+$conexion = $ftpObj -> connect('localhost', $user, $pass);
 
-// close the FTP stream 
-ftp_close($conn_id); 
+//Subir archivo
+$fileFrom = $_FILES["fileToUpload"]["tmp_name"];
+$fileTo =  $dir . $_FILES["fileToUpload"]["name"];
+$ftpObj -> uploadFile($fileFrom, $fileTo);
 
 header('Location: ../../home.php');
 ?>
