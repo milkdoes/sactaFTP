@@ -113,7 +113,6 @@ $pass = $_SESSION['ftp_pass'];
 		<script type="text/javascript" src="script/plugin/jquery.min.js"></script>
 		<script type="text/javascript" src="script/plugin/materialize.min.js"></script>
 		<script type="text/javascript" src="script/page/ini.js"></script>
-		<script type="text/javascript" src="script/page/index.js"></script>
 		<script>
 			// $(".carpeta").on('click', function (){
 			// 	console.log($(this).attr("id"));
