@@ -27,16 +27,18 @@ $pass = $_SESSION['ftp_pass'];
 				<form action="script/data/subir.php" method="post" enctype="multipart/form-data" id="archivo">
 					<a class="file-field input-field waves-effect waves-light btn-flat white-text s1">
 						<i class="material-icons left white-text">file_upload</i>Subir
-						<input type="file" name="fileToUpload" id="fileToUpload" onchange="subir()">
+						<input type="file" multiple name="fileToUpload" id="fileToUpload" onchange="subir()">
 					</a>
 					<input type="hidden" name="dir" value="/" id="dirSubir"/>
 				</form>
 				<!--<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_upload</i>Subir</a>-->
-				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_download</i>Descargar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" onclick="descargarArchivos()"><i class="material-icons left white-text">file_download</i>Descargar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_copy</i>Copiar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_paste</i>Pegar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_cut</i>Cortar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal1"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal2" onclick="mostrarArchivosABorrar()"><i class="material-icons left white-text">delete</i>Borrar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">share</i>Compartir</a>
 		</div>
 
 		<!-- Directorio actual -->
@@ -56,7 +58,7 @@ $pass = $_SESSION['ftp_pass'];
 			<div class="file-field input-field col s12 m8 l8">
 					<div class="btn">
 						<span>Archivo</span>
-						<input type="file" name="fileToUpload" id="fileToUpload">
+						<input type="file" multiple name="fileToUpload" id="fileToUpload">
 					</div>
 					<div class="file-path-wrapper">
 						<input class="file-path validate" type="text">
@@ -93,6 +95,23 @@ $pass = $_SESSION['ftp_pass'];
 			      	<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
 			    </div>
 			</form>
+		</div>
+
+		<!-- Modal Borrar Archivos -->
+		<div id="modal2" class="modal">
+		    <div class="modal-content">
+		      	<h4>Borrar archivo</h4>
+		        Los siguientes archivos se borrarán:
+		      	<div id="archivosABorrar">          
+		        </div>
+		    </div>
+		    <div class="modal-footer">
+		    	<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
+					<button class="btn waves-effect waves-light" name="action" onclick="borrarArchivos()">Borrar
+			  		</button>
+				</div>
+		      	<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
+		    </div>
 		</div>
 
 		<div id="footer"></div>
@@ -170,6 +189,36 @@ $pass = $_SESSION['ftp_pass'];
 				
 				//Hacer submit del form (post)
 				document.getElementById("archivo").submit();
+			}
+
+			function descargarArchivos(){
+				console.log("click!");
+				// $.post("script/data/descargarArchivos.php", { archivos: arrayElementosChecked }).done(function(data, status){
+				// 	$("#divArchivos").empty();
+				// 	$("#divArchivos").append(data);
+				// });
+			}
+
+			function borrarArchivos(){
+				$.post("script/data/borrarArchivos.php", { archivos: arrayElementosChecked }).done(function(data, status){
+					location.reload();
+				});
+			}
+
+			function mostrarArchivosABorrar(){
+				//Obtener el div para mostrar los archivos
+				var div = document.getElementById("archivosABorrar");
+				div.innerHTML = "";
+
+				//Desplegar lista de elementos
+				aLenE = arrayElementosChecked.length;
+				if(arrayElementosChecked[0] == undefined){
+					div.innerHTML += "<p>No hay archivos seleccionados.</p>";
+				} else {
+					for (i = 0; i < aLenE; i++) {
+				    	div.innerHTML += arrayElementosChecked[i] + '<br>';
+					}
+				}
 			}
 
 		  	$(document).ready(function(){

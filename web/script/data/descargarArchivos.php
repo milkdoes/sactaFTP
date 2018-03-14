@@ -19,11 +19,15 @@ $ftpObj = new FTPClient();
 // *** Connect.
 $conexion = $ftpObj -> connect('localhost', $user, $pass);
 
-var_dump($_FILES);
-//Subir archivo
-$fileFrom = $_FILES["fileToUpload"]["tmp_name"];
-$fileTo =  $dir . $_FILES["fileToUpload"]["name"];
-$ftpObj -> uploadFile($fileFrom, $fileTo);
-
-header('Location: ../../home.php');
+//Borrar archivo
+$archivos = $_POST['archivos'];
+var_dump($_POST['archivos']);
+foreach($archivos as $fileFrom){
+	$tmp = explode("/", $fileFrom);
+	$nombreArchivo = end($tmp);
+	echo $nombreArchivo;
+	$ftpObj -> downloadFile($nombreArchivo, "/home/luis/Downloads/" . $nombreArchivo);
+	echo "/home/luis/Downloads" . $fileFrom;
+}
+//header('Location: ../../home.php');
 ?>

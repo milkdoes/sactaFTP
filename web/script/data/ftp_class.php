@@ -123,7 +123,8 @@ Class FTPClient
 	{
 		// *** Set the transfer mode
 		$asciiArray = array('txt', 'csv');
-		$extension = end(explode('.', $fileFrom));
+		$tmp = explode('.', $fileFrom);
+		$extension = end($tmp);
 		if (in_array($extension, $asciiArray)) {
 			$mode = FTP_ASCII;
 		} else {
@@ -139,6 +140,22 @@ Class FTPClient
 
 			return false;
 			$this->logMessage('There was an error downloading file "' . $fileFrom . '" to "' . $fileTo . '"');
+		}
+
+	}
+
+	public function deleteFile ($fileName)
+	{
+
+		// try to delete $fileName
+		if (ftp_delete($this->connectionId, $fileName)) {
+
+			return true;
+			$this->logMessage(' file "' . $fileName . '" successfully deleted');
+		} else {
+
+			return false;
+			$this->logMessage('There was an error deleting file "' . $fileName . '"');
 		}
 
 	}
