@@ -26,7 +26,7 @@ foreach($archivos as $fileFrom){
 	$tmp = explode("/", $fileFrom);
 	$nombreArchivo = end($tmp);
 	echo $nombreArchivo;
-	$ftpObj -> downloadFile($nombreArchivo, "/home/luis/Downloads/" . $nombreArchivo);
+	$ftpObj -> downloadFile($nombreArchivo, "/tmp/" . $nombreArchivo);
 	echo "/home/luis/Downloads" . $fileFrom;
 }
 //header('Location: ../../home.php');

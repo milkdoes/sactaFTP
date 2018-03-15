@@ -193,10 +193,11 @@ $pass = $_SESSION['ftp_pass'];
 
 			function descargarArchivos(){
 				console.log("click!");
-				// $.post("script/data/descargarArchivos.php", { archivos: arrayElementosChecked }).done(function(data, status){
-				// 	$("#divArchivos").empty();
-				// 	$("#divArchivos").append(data);
-				// });
+				$.post("script/data/descargarArchivos.php", { archivos: arrayElementosChecked }).done(function(data, status){
+					// $("#divArchivos").empty();
+					// $("#divArchivos").append(data);
+					location.reload();
+				});
 			}
 
 			function borrarArchivos(){
