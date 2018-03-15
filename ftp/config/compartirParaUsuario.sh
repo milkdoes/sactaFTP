@@ -24,8 +24,13 @@ done
 # Crear directorio de compartimiento a huesped si no lo tiene.
 directorioHuespedCompartidos="$DIRECTORIO_FTP_USUARIO/$usuarioHuesped/$NOMBRE_DIRECTORIO_COMPARTIDOS"
 mkdir "$directorioHuespedCompartidos"
+chown -R "$USUARIO_FTP:nogroup" "$directorioHuespedCompartidos"
+chmod -R 757 "$directorioHuespedCompartidos"
+
 directorioHuespedPatrocinador="$directorioHuespedCompartidos/$usuarioPatrocinador"
 mkdir "$directorioHuespedPatrocinador"
+chown -R "$USUARIO_FTP:nogroup" "$directorioHuespedPatrocinador"
+chmod -R 757 "$directorioHuespedPatrocinador"
 
 # Compartir los archivos y/o directorios dados.
 rutaUsuarioPatrocinadorFtp="$DIRECTORIO_FTP_USUARIO/$usuarioPatrocinador"
