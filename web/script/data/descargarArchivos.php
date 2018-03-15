@@ -33,6 +33,12 @@ foreach($archivos as $fileFrom){
 	echo $nombreArchivo;
 	$ftpObj -> downloadFile($nombreArchivo, "/tmp/" . $nombreArchivo);
 	echo "/tmp/" . $nombreArchivo;
+
+	header("Content-disposition: attachment; filename=$nombreArchivo");
+	header("Content-type: application/octet-stream");
+	readfile("/tmp/" . $nombreArchivo);
 }
+
+
 //header('Location: ../../home.php');
 ?>

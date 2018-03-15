@@ -53,23 +53,6 @@ $pass = $_SESSION['ftp_pass'];
 		    ?>
       	</div>
 
-      	<!--Subir archivo-->
-		<form action="script/data/subir.php" method="post" enctype="multipart/form-data" class="row">
-			<div class="file-field input-field col s12 m8 l8">
-					<div class="btn">
-						<span>Archivo</span>
-						<input type="file" multiple name="fileToUpload" id="fileToUpload">
-					</div>
-					<div class="file-path-wrapper">
-						<input class="file-path validate" type="text">
-					</div>
-			</div>
-			<div class="input-field col s12 m4 l4">
-				<input type="submit" value="Subir archivo" class="btn waves-effect waves-light">
-			</div>
-			<input type="hidden" name="dir" value="/" id="dirSubir2"/>
-        </form>
-
         <!-- Modals -->
 
 		  <!-- Modal Crear Carpeta -->
