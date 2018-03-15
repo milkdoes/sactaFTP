@@ -1,6 +1,8 @@
 #!/bin/bash
 # Archivo para compartir directorios y/o archivos a otro usuario.
 
+# Parametros: usuarioHuesped usuarioPatrocinador rutaArchivoDirectorio1 rutaArchivoDirectorio2 .. rutaArchivoDirectorioN
+
 # CONSTANTES.
 USUARIO_FTP="vsftpd"
 DIRECTORIO_FTP_USUARIO="/home/$USUARIO_FTP/ftp"

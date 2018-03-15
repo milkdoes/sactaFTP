@@ -12,6 +12,7 @@ USUARIO_FTP="vsftpd"
 ARCHIVO_CONTRASENAS="/etc/vsftpd/ftpd.passwd"
 DIRECTORIO_FTP_USUARIO="/home/$USUARIO_FTP/ftp"
 DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES="/etc/vsftpd_user_conf"
+NOMBRE_DIRECTORIO_COMPARTIDOS="compartidos"
 
 # PRINCIPAL/MAIN.
 # Definir credenciales y rutas de directorio y archivo de configuracion
@@ -31,14 +32,22 @@ else
 	htpasswd -c -p -b "$ARCHIVO_CONTRASENAS" "$USUARIO_VIRTUAL" $(openssl passwd -1 -noverify "$CONTRASENA_VIRTUAL")
 fi
 
-# Crear directorio ejemplo para usuario ejemplo junto con archivo con ruta a
-# directorio ejemplo.
+# Crear directorio para usuario virtual junto con archivo con ruta a
+# directorio de usuario virtual.
 mkdir "$DIRECTORIO_VIRTUAL"
+
+# Crear directorio de archivos compartidos.
+mkdir "$DIRECTORIO_VIRTUAL/$NOMBRE_DIRECTORIO_COMPARTIDOS"
+
+# Editar valores de ftp para usuario virtual.
 echo "local_root=$DIRECTORIO_VIRTUAL" >> "$ARCHIVO_VIRTUAL"
 echo "write_enable=YES" >> "$ARCHIVO_VIRTUAL"
 echo "allow_writeable_chroot=YES" >> "$ARCHIVO_VIRTUAL"
 
-# Permitir escritura en directorio de usuario ejemplo.
+# Dar posesion al usuario ftp.
+chown -R "$USUARIO_FTP:nogroup" "$DIRECTORIO_VIRTUAL"
+
+# Permitir escritura en directorio de usuario virtual.
 chmod 757 -R "$DIRECTORIO_VIRTUAL"
 
 # Reiniciar servicio de vsftpd.
