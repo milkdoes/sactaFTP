@@ -151,10 +151,10 @@ $pass = $_SESSION['ftp_pass'];
 
 			//Agregar/eliminar elementos al array de elementos seleccionados
 			$(document).on('click', '.CBelemento', function (){
+				
+				//Armar directorio actual
 				var dirActual = "";
 				aLen = arrayDirActual.length;
-
-				//Armar directorio actual
 				for (i = 0; i < aLen; i++) {
 			    	dirActual += arrayDirActual[i];
 				}
@@ -193,7 +193,13 @@ $pass = $_SESSION['ftp_pass'];
 
 			function descargarArchivos(){
 				console.log("click!");
-				$.post("script/data/descargarArchivos.php", { archivos: arrayElementosChecked }).done(function(data, status){
+				//Armar directorio actual
+				var dirActual = "";
+				aLen = arrayDirActual.length;
+				for (i = 0; i < aLen; i++) {
+			    	dirActual += arrayDirActual[i];
+				}
+				$.post("script/data/descargarArchivos.php", { archivos: arrayElementosChecked, dir: dirActual }).done(function(data, status){
 					// $("#divArchivos").empty();
 					// $("#divArchivos").append(data);
 					location.reload();

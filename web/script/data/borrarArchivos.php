@@ -4,7 +4,6 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 $dir = $_POST['dir'];
-
 echo $dir;
 
 $user = $_SESSION['ftp_user'];
@@ -24,5 +23,5 @@ $archivos = $_POST['archivos'];
 foreach($archivos as $fileName){
 	$ftpObj -> deleteFile($fileName);
 }
-header('Location: ../../home.php');
+//header('Location: ../../home.php');
 ?>

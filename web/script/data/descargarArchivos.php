@@ -4,7 +4,6 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 $dir = $_POST['dir'];
-
 echo $dir;
 
 $user = $_SESSION['ftp_user'];
@@ -19,7 +18,13 @@ $ftpObj = new FTPClient();
 // *** Connect.
 $conexion = $ftpObj -> connect('localhost', $user, $pass);
 
-//Borrar archivo
+//Cambiar directorio al directorio actual en la clase FTP
+if(isset($_POST['dir'])){ 
+	$dir = $_POST['dir'];
+	$ftpObj -> changeDir($dir);
+}
+
+//Descargar archivo
 $archivos = $_POST['archivos'];
 var_dump($_POST['archivos']);
 foreach($archivos as $fileFrom){
@@ -27,7 +32,7 @@ foreach($archivos as $fileFrom){
 	$nombreArchivo = end($tmp);
 	echo $nombreArchivo;
 	$ftpObj -> downloadFile($nombreArchivo, "/tmp/" . $nombreArchivo);
-	echo "/home/luis/Downloads" . $fileFrom;
+	echo "/tmp/" . $nombreArchivo;
 }
 //header('Location: ../../home.php');
 ?>
