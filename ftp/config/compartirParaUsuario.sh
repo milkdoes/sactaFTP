@@ -37,7 +37,7 @@ do
 	# Crear vinculo fuerte si es un archivo valido.
 	if [ -f "$rutaActual" ]
 	then
-		ln "$rutaActual" "$rutaNueva"
+		cp -aln "$rutaActual" "$directorioHuespedPatrocinador"
 	fi
 
 	# Crear vinculo fuerte a cada archivo del directorio si es un directorio.
