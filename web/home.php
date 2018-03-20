@@ -33,8 +33,8 @@ $pass = $_SESSION['ftp_pass'];
 				</form>
 				<!--<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_upload</i>Subir</a>-->
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="descargarArchivos()"><i class="material-icons left white-text">file_download</i>Descargar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_copy</i>Copiar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_paste</i>Pegar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" onclick="copiarArchivos()"><i class="material-icons left white-text">file_copy</i>Copiar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" onclick="pegarArchivos()"><i class="material-icons left white-text">content_paste</i>Pegar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_cut</i>Cortar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal1"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal2" onclick="mostrarArchivosABorrar()"><i class="material-icons left white-text">delete</i>Borrar</a>
@@ -105,6 +105,7 @@ $pass = $_SESSION['ftp_pass'];
 		<script>
 			var arrayDirActual = ["/"];
 			var arrayElementosChecked = [];
+			var arrayElementosACopiar = [];
 
 			//Cambiar directorio actual
 			$(document).on('click', '.carpeta', function (){
@@ -168,8 +169,6 @@ $pass = $_SESSION['ftp_pass'];
 				for (i = 0; i < aLen; i++) {
 			    	dirActual += arrayDirActual[i];
 				}
-				
-				
 				//Hacer submit del form (post)
 				document.getElementById("archivo").submit();
 			}
@@ -191,6 +190,24 @@ $pass = $_SESSION['ftp_pass'];
 
 			function borrarArchivos(){
 				$.post("script/data/borrarArchivos.php", { archivos: arrayElementosChecked }).done(function(data, status){
+					$("#divArchivos").empty();
+					$("#divArchivos").append(data);
+					// location.reload();
+				});
+			}
+
+			function copiarArchivos(){
+				arrayElementosCopiados = arrayElementosChecked;
+			}
+
+			function pegarArchivos(){
+				//Armar directorio actual
+				var dirActual = "";
+				aLen = arrayDirActual.length;
+				for (i = 0; i < aLen; i++) {
+			    	dirActual += arrayDirActual[i];
+				}
+				$.post("script/data/pegarArchivos.php", { archivos: arrayElementosCopiados, dir: dirActual }).done(function(data, status){
 					location.reload();
 				});
 			}

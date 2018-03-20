@@ -8,6 +8,19 @@ if (session_status() == PHP_SESSION_NONE) {
 	session_start();
 }
 
+function ftp_rdel($handle, $path) {
+
+	if (@ftp_delete ($handle, $path) === false) {
+
+	    if ($children = @ftp_nlist ($handle, $path)) {
+	      	foreach ($children as $p)
+	        	ftp_rdel ($handle,  $p);
+	    }
+
+    	@ftp_rmdir ($handle, $path);
+  	}
+}
+
 Class FTPClient
 {
 	// *** Class variables
@@ -145,19 +158,29 @@ Class FTPClient
 	}
 
 	public function deleteFile ($fileName)
-	{
+	{	
 
-		// try to delete $fileName
-		if (ftp_delete($this->connectionId, $fileName)) {
+		if(substr($fileName, -1) == "/"){
+			if (ftp_rdel($this->connectionId, $fileName)) {
+				return true;
+				$this->logMessage(' folder "' . $fileName . '" successfully deleted');
+			} else {
 
-			return true;
-			$this->logMessage(' file "' . $fileName . '" successfully deleted');
+				return false;
+				$this->logMessage('There was an error deleting folder "' . $fileName . '"');
+			}
 		} else {
+			// try to delete $fileName
+			if (ftp_delete($this->connectionId, $fileName)) {
 
-			return false;
-			$this->logMessage('There was an error deleting file "' . $fileName . '"');
-		}
+				return true;
+				$this->logMessage(' file "' . $fileName . '" successfully deleted');
+			} else {
 
+				return false;
+				$this->logMessage('There was an error deleting file "' . $fileName . '"');
+			}
+		}	
 	}
 
 	public function __deconstruct()

@@ -26,7 +26,7 @@ if(isset($_POST['dir'])){
 
 //Descargar archivo
 $archivos = $_POST['archivos'];
-var_dump($_POST['archivos']);
+
 foreach($archivos as $fileFrom){
 	$tmp = explode("/", $fileFrom);
 	$nombreArchivo = end($tmp);
@@ -34,11 +34,11 @@ foreach($archivos as $fileFrom){
 	$ftpObj -> downloadFile($nombreArchivo, "/tmp/" . $nombreArchivo);
 	echo "/tmp/" . $nombreArchivo;
 
-	header("Content-disposition: attachment; filename=" . $nombreArchivo);
-	header("Content-type: application/octet-stream");
-	readfile("/tmp/" . $nombreArchivo);
+	
 }
-
+header("Content-disposition: attachment; filename=" . $nombreArchivo);
+header("Content-type: application/octet-stream");
+readfile("/tmp/" . $nombreArchivo);
 
 //header('Location: ../../home.php');
 ?>
