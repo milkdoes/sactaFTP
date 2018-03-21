@@ -3,8 +3,6 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-$dir = $_POST['dir'];
-echo $dir;
 
 $user = $_SESSION['ftp_user'];
 $pass = $_SESSION['ftp_pass'];
@@ -26,8 +24,8 @@ $conexion = $ftpObj -> connect('localhost', $user, $pass);
 
 
 //Cambiar directorio al directorio actual en la clase FTP
-if(isset($_POST['dir'])){ 
-	$dir = $_POST['dir'];
+if(isset($_POST['dirDescarga'])){ 
+	$dir = $_POST['dirDescarga'];
 	$ftpObj -> changeDir($dir);
 }
 
@@ -37,6 +35,7 @@ $archivos = $_POST['archivos'];
 /*var_dump($_POST['archivos']);
 foreach($archivos as $fileFrom){
 	*/
+
 	$tmp = explode("/", $archivos);
 	$nombreArchivo = end($tmp);
 	$ftpObj -> downloadFile($nombreArchivo, "/tmp/" . $nombreArchivo);
