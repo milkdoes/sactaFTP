@@ -200,7 +200,7 @@ $pass = $_SESSION['ftp_pass'];
 				$.post("script/data/borrarArchivos.php", { archivos: arrayElementosChecked }).done(function(data, status){
 					$("#divArchivos").empty();
 					$("#divArchivos").append(data);
-					// location.reload();
+					location.reload();
 				});
 			}
 
