@@ -97,6 +97,13 @@ $pass = $_SESSION['ftp_pass'];
 		    </div>
 		</div>
 
+		<form action="script/data/descargarArchivos.php" method="post" enctype="multipart/form-data" id="descargarArchivos" hidden>
+
+		<input type="text" name="archivos" id ="archivos">
+
+
+
+		</form>
 		<div id="footer"></div>
 		<!-- Scripts. -->
 		<script type="text/javascript" src="script/plugin/jquery.min.js"></script>
@@ -181,6 +188,8 @@ $pass = $_SESSION['ftp_pass'];
 				for (i = 0; i < aLen; i++) {
 			    	dirActual += arrayDirActual[i];
 				}
+				document.getElementById("archivos").value = arrayElementosChecked[0];
+				document.getElementById("descargarArchivos").submit();
 				$.post("script/data/descargarArchivos.php", { archivos: arrayElementosChecked, dir: dirActual }).done(function(data, status){
 					// $("#divArchivos").empty();
 					// $("#divArchivos").append(data);
