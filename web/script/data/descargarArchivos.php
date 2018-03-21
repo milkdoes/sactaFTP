@@ -39,9 +39,7 @@ foreach($archivos as $fileFrom){
 	*/
 	$tmp = explode("/", $archivos);
 	$nombreArchivo = end($tmp);
-	echo $nombreArchivo;
 	$ftpObj -> downloadFile($nombreArchivo, "/tmp/" . $nombreArchivo);
-	echo "/tmp/" . $nombreArchivo;
 
 	header("Content-disposition: attachment; filename=$nombreArchivo");
 	header("Content-type: application/octet-stream");
