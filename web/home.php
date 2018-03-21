@@ -136,7 +136,6 @@ $pass = $_SESSION['ftp_pass'];
 				document.getElementById("dir").innerHTML = dirActual;
 				//Cambiar los inputs escondidos
 				document.getElementById("dirSubir").value = dirActual;
-				document.getElementById("dirSubir2").value = dirActual;
 				document.getElementById("dirNuevaCarpeta").value = dirActual;
 			});
 
