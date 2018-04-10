@@ -38,7 +38,7 @@ $pass = $_SESSION['ftp_pass'];
 				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_cut</i>Cortar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal1"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal2" onclick="mostrarArchivosABorrar()"><i class="material-icons left white-text">delete</i>Borrar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">share</i>Compartir</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCompartir" onclick="mostrarArchivosACompartir()"><i class="material-icons left white-text">share</i>Compartir</a>
 		</div>
 
 		<!-- Directorio actual -->
@@ -95,6 +95,29 @@ $pass = $_SESSION['ftp_pass'];
 				</div>
 		      	<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
 		    </div>
+		</div>
+
+		<!-- Modal Compartir archivos -->
+		<div id="modalCompartir" class="modal">
+			<!--<form action="script/data/compartir.php" method="POST">-->
+			    <div class="modal-content">
+			      	<h4>Compartir Archivos</h4>
+			      	<div class="input-field">
+			            <input id="usuarioPatrocinador" type="text" name="usuarioPatrocinador" required> 
+			            <label for="usuarioPatrocinador">Usuario patrocinador</label>		            
+			        </div>
+				    Se compartir&aacute;n los siguientes archivos:
+			      	<div id="archivosACompartir">          
+			        </div>
+			    </div>
+			    <div class="modal-footer">
+			    	<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
+						<button class="btn waves-effect waves-light" name="action" onclick="compartirArchivos()">Compartir
+				  		</button>
+					</div>
+			      	<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
+			    </div>
+			<!--</form>-->
 		</div>
 
 		<form action="script/data/descargarArchivos.php" method="post" enctype="multipart/form-data" id="descargarArchivos" hidden>
@@ -206,6 +229,15 @@ $pass = $_SESSION['ftp_pass'];
 				});
 			}
 
+			function compartirArchivos(){
+				usuarioPatrocinador = document.getElementById("usuarioPatrocinador").value;
+				$.post("script/data/compartirArchivos.php", { usuarioHuesped: '<?php echo $user ?>', usuarioPatrocinador: usuarioPatrocinador, archivos: arrayElementosChecked }).done(function(data, status){
+					//$("#divArchivos").empty();
+					//$("#divArchivos").append(data);
+					location.reload();
+				});
+			}
+
 			function copiarArchivos(){
 				arrayElementosCopiados = arrayElementosChecked;
 			}
@@ -237,6 +269,23 @@ $pass = $_SESSION['ftp_pass'];
 					}
 				}
 			}
+
+			function mostrarArchivosACompartir(){
+				//Obtener el div para mostrar los archivos
+				var div = document.getElementById("archivosACompartir");
+				div.innerHTML = "";
+
+				//Desplegar lista de elementos
+				aLenE = arrayElementosChecked.length;
+				if(arrayElementosChecked[0] == undefined){
+					div.innerHTML += "<p>No hay archivos seleccionados.</p>";
+				} else {
+					for (i = 0; i < aLenE; i++) {
+				    	div.innerHTML += arrayElementosChecked[i] + '<br>';
+					}
+				}
+			}
+				
 
 		  	$(document).ready(function(){
 		    	// the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered

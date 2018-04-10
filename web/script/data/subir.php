@@ -5,8 +5,6 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 $dir = $_POST['dir'];
 
-echo $dir;
-
 $user = $_SESSION['ftp_user'];
 $pass = $_SESSION['ftp_pass'];
 
@@ -19,7 +17,6 @@ $ftpObj = new FTPClient();
 // *** Connect.
 $conexion = $ftpObj -> connect('localhost', $user, $pass);
 
-var_dump($_FILES);
 //Subir archivo
 $fileFrom = $_FILES["fileToUpload"]["tmp_name"];
 $fileTo =  $dir . $_FILES["fileToUpload"]["name"];
