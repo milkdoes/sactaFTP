@@ -25,20 +25,20 @@ $pass = $_SESSION['ftp_pass'];
 		<!--Botones de funciones FTP-->
 		<div class="row center blue-grey darken-2">
 				<form action="script/data/subir.php" method="post" enctype="multipart/form-data" id="archivo">
-					<a class="file-field input-field waves-effect waves-light btn-flat white-text s1">
+					<a class="file-field input-field waves-effect waves-light btn-flat white-text s1"  id="btnSubir">
 						<i class="material-icons left white-text">file_upload</i>Subir
 						<input type="file" multiple name="fileToUpload" id="fileToUpload" onchange="subir()">
 					</a>
 					<input type="hidden" name="dir" value="/" id="dirSubir"/>
 				</form>
 				<!--<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_upload</i>Subir</a>-->
-				<a class="waves-effect waves-light btn-flat white-text s1" onclick="descargarArchivos()"><i class="material-icons left white-text">file_download</i>Descargar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1" onclick="copiarArchivos()"><i class="material-icons left white-text">file_copy</i>Copiar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1" onclick="pegarArchivos()"><i class="material-icons left white-text">content_paste</i>Pegar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">content_cut</i>Cortar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal1"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
-				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal2" onclick="mostrarArchivosABorrar()"><i class="material-icons left white-text">delete</i>Borrar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCompartir" onclick="mostrarArchivosACompartir()"><i class="material-icons left white-text">share</i>Compartir</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" onclick="descargarArchivos()" id="btnDescargar"><i class="material-icons left white-text">file_download</i>Descargar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" onclick="copiarArchivos()" id="btnCopiar"><i class="material-icons left white-text">file_copy</i>Copiar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" onclick="pegarArchivos()" id="btnPegar"><i class="material-icons left white-text">content_paste</i>Pegar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" id="btnCortar"><i class="material-icons left white-text">content_cut</i>Cortar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal1" id="btnNuevaCarpeta"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal2" onclick="mostrarArchivosABorrar()" id="btnBorrar"><i class="material-icons left white-text">delete</i>Borrar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCompartir" onclick="mostrarArchivosACompartir()" id="btnCompartir"><i class="material-icons left white-text">share</i>Compartir</a>
 		</div>
 
 		<!-- Directorio actual -->
@@ -136,7 +136,7 @@ $pass = $_SESSION['ftp_pass'];
 		<script>
 			var arrayDirActual = ["/"];
 			var arrayElementosChecked = [];
-			var arrayElementosACopiar = [];
+			var arrayElementosCopiados = [];
 
 			//Cambiar directorio actual
 			$(document).on('click', '.carpeta', function (){
@@ -161,6 +161,8 @@ $pass = $_SESSION['ftp_pass'];
 				//Cambiar los inputs escondidos
 				document.getElementById("dirSubir").value = dirActual;
 				document.getElementById("dirNuevaCarpeta").value = dirActual;
+
+				actualizarBotones();
 			});
 
 			//Agregar/eliminar elementos al array de elementos seleccionados
@@ -190,6 +192,8 @@ $pass = $_SESSION['ftp_pass'];
 			    	stringElementos += arrayElementosChecked[i] + ', ';
 				}
 				console.log(stringElementos);
+
+				actualizarBotones();
 			});
 
 			function subir(){
@@ -240,6 +244,7 @@ $pass = $_SESSION['ftp_pass'];
 
 			function copiarArchivos(){
 				arrayElementosCopiados = arrayElementosChecked;
+				actualizarBotones();
 			}
 
 			function pegarArchivos(){
@@ -285,9 +290,44 @@ $pass = $_SESSION['ftp_pass'];
 					}
 				}
 			}
+
+			//Guardar los elementos de los botones de las funciones en variables
+			var btnSubir = document.getElementById("btnSubir");
+			var btnDescargar = document.getElementById("btnDescargar");
+			var btnCopiar = document.getElementById("btnCopiar");
+			var btnPegar = document.getElementById("btnPegar");
+			var btnCortar = document.getElementById("btnCortar");
+			var btnNuevaCarpeta = document.getElementById("btnNuevaCarpeta");
+			var btnBorrar = document.getElementById("btnBorrar");
+			var btnCompartir = document.getElementById("btnCompartir");
+
+			function actualizarBotones(){ //Mostrar/ocultar botones de funciones
+				if(arrayElementosChecked.length == 0){ //Cuando no hay elementos seleccionados
+					$(btnDescargar).hide();
+					$(btnCopiar).hide();
+					$(btnCortar).hide();
+					$(btnPegar).hide();
+					$(btnBorrar).hide();
+					$(btnCompartir).hide();
+				}
+
+				if(arrayElementosChecked.length != 0){ //Cuando hay por lo menos un elemento seleccionado
+					$(btnDescargar).show();
+					$(btnCopiar).show();
+					$(btnCortar).show();
+					$(btnBorrar).show();
+					$(btnCompartir).show();
+				}
+
+				if(arrayElementosCopiados.length != 0){ //Si se copio o se corto un elemento
+					$(btnPegar).show();
+				}
+			}
 				
 
 		  	$(document).ready(function(){
+		  		actualizarBotones();
+
 		    	// the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
 		    	$('.modal').modal();
 
