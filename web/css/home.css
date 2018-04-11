@@ -1,3 +1,13 @@
 td, th {
     padding: 8px 5px;
 }
+
+.usuario{
+    background-color:#0091ea;
+}
+
+.letraUsuario{
+    color:white;
+    float:right;
+}
+

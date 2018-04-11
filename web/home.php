@@ -21,7 +21,10 @@ $pass = $_SESSION['ftp_pass'];
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	</head>
 	<body>
-		<div id="header"></div>
+        <div class = 'usuario'>
+		<a class = 'letraUsuario'><?php echo $_SESSION['ftp_user'];?></a>
+		</div>
+        <div id="header"></div>
 		<!--Botones de funciones FTP-->
 		<div class="row center blue-grey darken-2">
 				<form action="script/data/subir.php" method="post" enctype="multipart/form-data" id="archivo">
@@ -297,5 +300,6 @@ $pass = $_SESSION['ftp_pass'];
 				
 		  	});   
 		</script>
+		
 	</body>
 </html>
