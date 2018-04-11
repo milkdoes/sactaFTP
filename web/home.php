@@ -22,7 +22,7 @@ $pass = $_SESSION['ftp_pass'];
 	</head>
 	<body>
         <div class = 'usuario'>
-		<a class = 'letraUsuario'><?php echo $_SESSION['ftp_user'];?></a>
+			<a class = 'letraUsuario'><?php echo $_SESSION['ftp_user'];?></a>
 		</div>
         <div id="header"></div>
 		<!--Botones de funciones FTP-->
