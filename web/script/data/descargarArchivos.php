@@ -21,14 +21,11 @@ $ftpObj = new FTPClient();
 // *** Connect.
 $conexion = $ftpObj -> connect('localhost', $user, $pass);
 
-
-
 //Cambiar directorio al directorio actual en la clase FTP
 if(isset($_POST['dirDescarga'])){ 
 	$dir = $_POST['dirDescarga'];
 	$ftpObj -> changeDir($dir);
 }
-
 
 //Descargar archivo
 $archivos = $_POST['archivos'];

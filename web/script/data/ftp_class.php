@@ -157,6 +157,43 @@ Class FTPClient
 
 	}
 
+	function copyPaste($file, $dir)
+	{ 
+        // *** Set the transfer mode
+		$asciiArray = array('txt', 'csv');
+		$tmp = explode('.', $file);
+		$extension = end($tmp);
+		if (in_array($extension, $asciiArray)) {
+			$mode = FTP_ASCII;
+		} else {
+			$mode = FTP_BINARY;
+		}
+
+		// try to download $remote_file and save it to $handle
+		if (ftp_get($this->connectionId, '/tmp/' . $file, $file, $mode, 0)) {
+
+			$this->logMessage(' file "' . $file . '" successfully downloaded');
+		} else {
+
+			$this->logMessage('There was an error downloading file "' . $file . '" to /tmp/');
+		}
+
+		// *** Upload the file
+		$upload = ftp_put($this->connectionId, $dir . $file, '/tmp/' . $file, $mode);
+
+		// *** Check upload status
+		if (!$upload) {
+			$this->logMessage('FTP upload has failed!');
+			return false;
+
+		} else {
+			$this->logMessage('Uploaded "' . $file . '" as "' . $dir . $file);
+			return true;
+		}
+
+		unlink('/tmp/' . $file);
+	}
+
 	public function deleteFile ($fileName)
 	{	
 

@@ -3,6 +3,11 @@
 if (session_status() == PHP_SESSION_NONE) {
 	session_start();
 }
+
+if(!isset($_SESSION['ftp_user'])){ //Si no hay un usuario en sesion
+	header('Location: login.php');
+}
+
 $user = $_SESSION['ftp_user'];
 $pass = $_SESSION['ftp_pass'];
 
@@ -37,8 +42,8 @@ $pass = $_SESSION['ftp_pass'];
 				<!--<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_upload</i>Subir</a>-->
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="descargarArchivos()" id="btnDescargar"><i class="material-icons left white-text">file_download</i>Descargar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="copiarArchivos()" id="btnCopiar"><i class="material-icons left white-text">file_copy</i>Copiar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" onclick="cortarArchivos()" id="btnCortar"><i class="material-icons left white-text">content_cut</i>Cortar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="pegarArchivos()" id="btnPegar"><i class="material-icons left white-text">content_paste</i>Pegar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1" id="btnCortar"><i class="material-icons left white-text">content_cut</i>Cortar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal1" id="btnNuevaCarpeta"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal2" onclick="mostrarArchivosABorrar()" id="btnBorrar"><i class="material-icons left white-text">delete</i>Borrar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCompartir" onclick="mostrarArchivosACompartir()" id="btnCompartir"><i class="material-icons left white-text">share</i>Compartir</a>
@@ -140,6 +145,7 @@ $pass = $_SESSION['ftp_pass'];
 			var arrayDirActual = ["/"];
 			var arrayElementosChecked = [];
 			var arrayElementosCopiados = [];
+			var cortar = false;
 
 			//Cambiar directorio actual
 			$(document).on('click', '.carpeta', function (){
@@ -230,8 +236,8 @@ $pass = $_SESSION['ftp_pass'];
 
 			function borrarArchivos(){
 				$.post("script/data/borrarArchivos.php", { archivos: arrayElementosChecked }).done(function(data, status){
-					$("#divArchivos").empty();
-					$("#divArchivos").append(data);
+					//$("#divArchivos").empty();
+					//$("#divArchivos").append(data);
 					location.reload();
 				});
 			}
@@ -248,6 +254,15 @@ $pass = $_SESSION['ftp_pass'];
 			function copiarArchivos(){
 				arrayElementosCopiados = arrayElementosChecked;
 				actualizarBotones();
+				cortar = false;
+
+			}
+
+			function cortarArchivos(){
+				arrayElementosCopiados = arrayElementosChecked;
+				actualizarBotones();
+				cortar = true;
+
 			}
 
 			function pegarArchivos(){
@@ -257,7 +272,9 @@ $pass = $_SESSION['ftp_pass'];
 				for (i = 0; i < aLen; i++) {
 			    	dirActual += arrayDirActual[i];
 				}
-				$.post("script/data/pegarArchivos.php", { archivos: arrayElementosCopiados, dir: dirActual }).done(function(data, status){
+				$.post("script/data/pegarArchivos.php", { archivos: arrayElementosCopiados, dir: dirActual, cortar: cortar }).done(function(data, status){
+					//$("#divArchivos").empty();
+					//$("#divArchivos").append(data);
 					location.reload();
 				});
 			}
