@@ -157,7 +157,7 @@ Class FTPClient
 
 	}
 
-	function copyPaste($file, $dir)
+	function copyPaste($file, $dirCopiados, $dirDestino)
 	{ 
         // *** Set the transfer mode
 		$asciiArray = array('txt', 'csv');
@@ -169,29 +169,42 @@ Class FTPClient
 			$mode = FTP_BINARY;
 		}
 
-		// try to download $remote_file and save it to $handle
-		if (ftp_get($this->connectionId, '/tmp/' . $file, $file, $mode, 0)) {
+		// Cambiar a dirCopiados
+		if (ftp_chdir($this->connectionId, $dirCopiados)) {
+			$this->logMessage('Current directory is now: ' . $dirCopiados);
+		} else {
+			$this->logMessage('Couldn\'t change directory');
+		}
 
+		// Descargar archivo a copiar en /tmp/
+		if (ftp_get($this->connectionId, '/tmp/' . $file, $file, $mode, 0)) {
 			$this->logMessage(' file "' . $file . '" successfully downloaded');
 		} else {
-
 			$this->logMessage('There was an error downloading file "' . $file . '" to /tmp/');
 		}
 
-		// *** Upload the file
-		$upload = ftp_put($this->connectionId, $dir . $file, '/tmp/' . $file, $mode);
+		// Cambiar a dirDestino
+		if (ftp_chdir($this->connectionId, $dirDestino)) {
+			$this->logMessage('Current directory is now: ' . $dirDestino);
+		} else {
+			$this->logMessage('Couldn\'t change directory');
+		}
+
+		// Subir archivo de /tmp/
+		$upload = ftp_put($this->connectionId, $dirDestino . $file, '/tmp/' . $file, $mode);
 
 		// *** Check upload status
 		if (!$upload) {
 			$this->logMessage('FTP upload has failed!');
+			unlink('/tmp/' . $file);
 			return false;
 
 		} else {
-			$this->logMessage('Uploaded "' . $file . '" as "' . $dir . $file);
+			$this->logMessage('Uploaded "' . $file . '" as "' . $dirDestino . $file);
+			unlink('/tmp/' . $file);
 			return true;
 		}
-
-		unlink('/tmp/' . $file);
+		
 	}
 
 	public function deleteFile ($fileName)
@@ -199,23 +212,24 @@ Class FTPClient
 
 		if(substr($fileName, -1) == "/"){
 			if (ftp_rdel($this->connectionId, $fileName)) {
-				return true;
 				$this->logMessage(' folder "' . $fileName . '" successfully deleted');
+				return true;
+				
 			} else {
-
-				return false;
 				$this->logMessage('There was an error deleting folder "' . $fileName . '"');
+				return false;
+
 			}
 		} else {
 			// try to delete $fileName
 			if (ftp_delete($this->connectionId, $fileName)) {
-
-				return true;
 				$this->logMessage(' file "' . $fileName . '" successfully deleted');
+				return true;
+				
 			} else {
-
-				return false;
 				$this->logMessage('There was an error deleting file "' . $fileName . '"');
+				return false;
+				
 			}
 		}	
 	}

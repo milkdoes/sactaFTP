@@ -145,6 +145,7 @@ $pass = $_SESSION['ftp_pass'];
 			var arrayDirActual = ["/"];
 			var arrayElementosChecked = [];
 			var arrayElementosCopiados = [];
+			var dirCopiados = "";
 			var cortar = false;
 
 			//Cambiar directorio actual
@@ -252,14 +253,26 @@ $pass = $_SESSION['ftp_pass'];
 			}
 
 			function copiarArchivos(){
+				//Guardar lista de elementos a copiar
 				arrayElementosCopiados = arrayElementosChecked;
+				//Guardar directorio de elementos a copiar
+				dirCopiados = "";
+				for (i = 0; i < aLen; i++) {
+			    	dirCopiados += arrayDirActual[i];
+				}
 				actualizarBotones();
 				cortar = false;
 
 			}
 
 			function cortarArchivos(){
+				//Guardar lista de elementos a copiar
 				arrayElementosCopiados = arrayElementosChecked;
+				//Guardar directorio de elementos a copiar
+				dirCopiados = "";
+				for (i = 0; i < aLen; i++) {
+			    	dirCopiados += arrayDirActual[i];
+				}
 				actualizarBotones();
 				cortar = true;
 
@@ -272,7 +285,7 @@ $pass = $_SESSION['ftp_pass'];
 				for (i = 0; i < aLen; i++) {
 			    	dirActual += arrayDirActual[i];
 				}
-				$.post("script/data/pegarArchivos.php", { archivos: arrayElementosCopiados, dir: dirActual, cortar: cortar }).done(function(data, status){
+				$.post("script/data/pegarArchivos.php", { archivos: arrayElementosCopiados, dirCopiados: dirCopiados, dirDestino: dirActual, cortar: cortar }).done(function(data, status){
 					//$("#divArchivos").empty();
 					//$("#divArchivos").append(data);
 					location.reload();
