@@ -38,26 +38,28 @@ $json = array(
 	, "parametrosEnviados" => json_encode($_REQUEST)
 	, "mensajesTerminal" => array()
 );
-foreach($archivos as $archivo){
-	$archivo = "\\'" . $archvio . "\\'";
-}
+
 if ($parametrosValidos) {
 	// Definir lista de archivos como una sola linea de texto.
-	$listaArchivos = implode("' '", $archivos);
-	$listaArchivos = "'" . $listaArchivos . "'";
-	echo $listaArchivos;
+	//$listaArchivos = implode("' '", $archivos);
+	//$listaArchivos = "'" . $listaArchivos . "'";
+	//echo $listaArchivos;
 	// Definir lista de parametros.
-	$parametros = "$usuarioHuesped $usuarioPatrocinador $listaArchivos";
+	//$parametros = "$usuarioHuesped $usuarioPatrocinador $listaArchivos";
 
 	//echo "<br>" . $parametros;
 
 	// Ejecutar compartimiento de archivos.
-	exec("sudo -u " . USUARIO_FTP . " " . RUTA_TERMINAL . " " .
-		SCRIPT_COMPARTIR .  " $parametros 2>&1",
-		$lineasSalida, $codigoSalida);
-	$json["mensaje"] = "Script ejecutado.";
-	$json["codigoSalida"] = $codigoSalida;
-	$json["mensajesTerminal"] = implode("<br />", $lineasSalida);
+	foreach($archivos as $archivo){
+		$archivo = "'" . $archivo . "'";
+		$parametros = "$usuarioHuesped $usuarioPatrocinador $archivo";
+		exec("sudo -u " . USUARIO_FTP . " " . RUTA_TERMINAL . " " . SCRIPT_COMPARTIR .  " $parametros 2>&1", $lineasSalida, $codigoSalida);
+		$json["mensaje"] = "Script ejecutado.";
+		$json["codigoSalida"] = $codigoSalida;
+		$json["mensajesTerminal"] = implode("<br />", $lineasSalida);
+	}
+	
+	
 }
 
 // Desplegar json.
