@@ -293,8 +293,7 @@ $pass = $_SESSION['ftp_pass'];
 			function compartirArchivos(){
 				usuarioPatrocinador = document.getElementById("usuarioPatrocinador").value;
 				$.post("script/data/compartirArchivos.php", { usuarioHuesped: '<?php echo $user ?>', usuarioPatrocinador: usuarioPatrocinador, archivos: arrayElementosChecked }).done(function(data, status){
-					//$("#divArchivos").empty();
-					//$("#divArchivos").append(data);
+					//$("#divArchivos").empty(); $("#divArchivos").append(data);
 					location.reload();
 				});
 			}

@@ -44,6 +44,6 @@ do
 	# Crear vinculo fuerte a cada archivo del directorio si es un directorio.
 	if [ -d "$rutaActual" ]
 	then
-		cp -aln "$rutaActual" "$directorioHuespedPatrocinador"
+		cp -arn "$rutaActual" "$directorioHuespedPatrocinador"
 	fi
 done
