@@ -3,7 +3,7 @@ td, th {
 }
 
 .usuario{
-    background-color:#0091ea;
+    background-color: #0091ea;
 }
 
 .letraUsuario{
@@ -11,3 +11,6 @@ td, th {
     float:right;
 }
 
+a {
+	cursor: pointer;
+}

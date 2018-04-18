@@ -59,7 +59,7 @@ function human_filesize($bytes, $decimals = 2) {
 }
 
 ?>
-<table>
+<table class="highlight">
     <thead>
       	<tr>
             <th style="width: 1px"></th>
@@ -102,6 +102,16 @@ function human_filesize($bytes, $decimals = 2) {
   			<?php
         }
 		  }
+      
   		?>
     </tbody>
 </table>
+<?php 
+if(count($contentsArray) == 2){
+  ?>
+  <div class="card-panel">
+    <span class="blue-grey-text text-lighten-2">Carpeta vacía<span>
+  </div>
+  <?php         
+}
+?>

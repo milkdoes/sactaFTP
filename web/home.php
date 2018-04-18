@@ -47,6 +47,7 @@ $pass = $_SESSION['ftp_pass'];
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="pegarArchivos()" id="btnPegar"><i class="material-icons left white-text">content_paste</i>Pegar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCrearCarpeta" id="btnNuevaCarpeta"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalBorrar" onclick="mostrarArchivosABorrar()" id="btnBorrar"><i class="material-icons left white-text">delete</i>Borrar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalRenombrar" onclick="mostrarArchivoARenombrar()" id="btnRenombrar"><i class="material-icons left white-text">edit</i>Renombrar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCompartir" onclick="mostrarArchivosACompartir()" id="btnCompartir"><i class="material-icons left white-text">share</i>Compartir</a>
 		</div>
 
@@ -106,6 +107,29 @@ $pass = $_SESSION['ftp_pass'];
 		    </div>
 		</div>
 
+		<!-- Modal Renombrar archivo -->
+		<div id="modalRenombrar" class="modal">
+			<!--<form action="script/data/renombrar.php" method="POST">-->
+			    <div class="modal-content">
+			      	<h4>Renombrar Archivo</h4>
+			      	Nombre antiguo:
+			      	<div id="nombreAntiguo">          
+			        </div>
+			      	<div class="input-field">
+			            <input id="nombreNuevo" type="text" name="nombreNuevo" required> 
+			            <label for="nombreNuevo">Nombre nuevo</label>		            
+			        </div>  	
+			    </div>
+			    <div class="modal-footer">
+			    	<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
+						<button class="btn waves-effect waves-light" name="action" onclick="renombrar()">Renombrar
+				  		</button>
+					</div>
+			      	<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
+			    </div>
+			<!--</form>-->
+		</div>
+
 		<!-- Modal Compartir archivos -->
 		<div id="modalCompartir" class="modal">
 			<!--<form action="script/data/compartir.php" method="POST">-->
@@ -149,6 +173,20 @@ $pass = $_SESSION['ftp_pass'];
 			var dirCopiados = "";
 			var cortar = false;
 
+			actualizarBotones();
+
+			//Para funciones de renombrado de elementos
+			function basename(str, sep) { //Regresa el nombre del archivo de una ruta dada
+				if(str.endsWith("/")){
+					str = str.slice(0, -1);
+				}
+			    return str.substr(str.lastIndexOf(sep) + 1);
+			}
+
+			function strip_extension(str) { //Regresa el nombre del archivo sin la extension
+			    return str.substr(0,str.lastIndexOf('.'));
+			}
+
 			//Cambiar directorio actual
 			$(document).on('click', '.carpeta', function (){
 				arrayElementosChecked = [];
@@ -157,13 +195,13 @@ $pass = $_SESSION['ftp_pass'];
 					arrayDirActual.pop();
 				}
 				else {
-				arrayDirActual.push($(this).attr("id"));
+					arrayDirActual.push($(this).attr("id"));
 				}
 				aLen = arrayDirActual.length;
 				for (i = 0; i < aLen; i++) {
 			    	dirActual += arrayDirActual[i];
 				}
-				console.log(dirActual);
+				console.log("Directorio actual: " + dirActual);
 				obtenerArchivos();
 				document.getElementById("dir").innerHTML = dirActual;
 
@@ -174,8 +212,7 @@ $pass = $_SESSION['ftp_pass'];
 				actualizarBotones();
 			});
 
-			//Agregar/eliminar elementos al array de elementos seleccionados
-			$(document).on('click', '.CBelemento', function (){
+			$(document).on('change', '.CBelemento', function (){
 				
 				//Armar directorio actual
 				var dirActual = "";
@@ -185,7 +222,7 @@ $pass = $_SESSION['ftp_pass'];
 				}
 				
 				//Comprobar si la propiedad checked es true o false
-				console.log($(this).is(':checked') == true);
+				console.log("Checked?: " + $(this).is(':checked'));
 				if($(this).is(':checked') == true){
 					//Agregar elemento/archivo a la lista
 					arrayElementosChecked.push(dirActual + $(this).attr("id"));
@@ -200,7 +237,7 @@ $pass = $_SESSION['ftp_pass'];
 				for (i = 0; i < aLenE; i++) {
 			    	stringElementos += arrayElementosChecked[i] + ', ';
 				}
-				console.log(stringElementos);
+				console.log("Elementos checked: " + stringElementos);
 
 				actualizarBotones();
 			});
@@ -256,6 +293,28 @@ $pass = $_SESSION['ftp_pass'];
 				});
 			}
 
+			function renombrar(){
+				nombreNuevo = document.getElementById("nombreNuevo").value;
+
+				//Armar directorio actual
+				var dirActual = "";
+				aLen = arrayDirActual.length;
+				for (i = 0; i < aLen; i++) {
+			    	dirActual += arrayDirActual[i];
+				}
+
+				$.post("script/data/renombrar.php", { dir: dirActual, oldName: basename(arrayElementosChecked[0] ,'/'), newName: nombreNuevo }).done(function(data, status){
+					//$("#divArchivos").empty();
+					//$("#divArchivos").append(data);
+					//location.reload();
+					Materialize.toast(data, 4000);
+					obtenerArchivos();
+					arrayElementosChecked = [];
+					$('#modalRenombrar').modal('close'); //Cierra el modal Renombrar
+					actualizarBotones();
+				});
+			}
+
 			function copiarArchivos(){
 				//Guardar lista de elementos a copiar
 				arrayElementosCopiados = arrayElementosChecked;
@@ -293,6 +352,7 @@ $pass = $_SESSION['ftp_pass'];
 					//$("#divArchivos").empty();
 					//$("#divArchivos").append(data);
 					//location.reload();
+					//Materialize.toast(data);
 					obtenerArchivos();
 					arrayElementosCopiados = [];
 					arrayElementosChecked = [];
@@ -316,6 +376,21 @@ $pass = $_SESSION['ftp_pass'];
 				    	div.innerHTML += arrayElementosChecked[i] + '<br>';
 					}
 				}
+			}
+
+			function mostrarArchivoARenombrar(){
+				//Obtener el div para mostrar el nombre del elemento
+				var div = document.getElementById("nombreAntiguo");
+
+				//Desplegar el elemento
+				if(arrayElementosChecked[0] == undefined){
+					div.innerHTML += "<p>No hay un archivo seleccionado.</p>";
+				} else {
+				    	div.innerHTML = basename(arrayElementosChecked[0] ,'/');
+				}
+
+				//Obtener el input para mostrar el nombre del elemento
+				document.getElementById("nombreNuevo").value = basename(arrayElementosChecked[0] ,'/');
 			}
 
 			function mostrarArchivosACompartir(){
@@ -343,18 +418,23 @@ $pass = $_SESSION['ftp_pass'];
 			var btnNuevaCarpeta = document.getElementById("btnNuevaCarpeta");
 			var btnBorrar = document.getElementById("btnBorrar");
 			var btnCompartir = document.getElementById("btnCompartir");
+			var btnRenombrar = document.getElementById("btnRenombrar");
+
 
 			function actualizarBotones(){ //Mostrar/ocultar botones de funciones
-				if(arrayElementosChecked.length == 0){ //Cuando no hay elementos seleccionados
+				aLen = arrayElementosChecked.length;
+
+				if(aLen == 0){ //Cuando no hay elementos seleccionados
 					$(btnDescargar).hide();
 					$(btnCopiar).hide();
 					$(btnCortar).hide();
 					$(btnPegar).hide();
 					$(btnBorrar).hide();
 					$(btnCompartir).hide();
+					$(btnRenombrar).hide();
 				}
 
-				if(arrayElementosChecked.length != 0){ //Cuando hay por lo menos un elemento seleccionado
+				if(aLen != 0){ //Cuando hay por lo menos un elemento seleccionado
 					$(btnDescargar).show();
 					$(btnCopiar).show();
 					$(btnCortar).show();
@@ -365,6 +445,28 @@ $pass = $_SESSION['ftp_pass'];
 				if(arrayElementosCopiados.length != 0){ //Si se copio o se corto un elemento
 					$(btnPegar).show();
 				}
+
+				if(aLen == 1){
+					$(btnRenombrar).show();
+				}
+
+				if(aLen > 1){
+					$(btnRenombrar).hide();
+				}
+
+				//Si alguno de los elementos seleccionados es una carpeta
+				var carpetaSeleccionada = false;
+				for (i = 0; i < aLen; i++) {
+			    	if(arrayElementosChecked[i].endsWith("/")){
+			    		carpetaSeleccionada = true;
+			    		break;
+			    	}
+				}
+				if(carpetaSeleccionada == true){
+					$(btnCopiar).hide();
+					$(btnCortar).hide();
+				}
+
 			}
 
 			function obtenerArchivos(){

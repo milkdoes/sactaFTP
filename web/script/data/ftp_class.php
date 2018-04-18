@@ -234,6 +234,19 @@ Class FTPClient
 		}	
 	}
 
+	public function rename ($oldName, $newName)
+	{	
+		if (ftp_rename ($this->connectionId, $oldName, $newName)) {
+			$this->logMessage(' Elemento "' . $oldName . '" renombrado a "' . $newName . '".');
+			return true;
+			
+		} else {
+			$this->logMessage('Hubo un error renombrando el elemento "' . $oldName . '".');
+			return false;
+
+		}
+	}
+
 	public function __deconstruct()
 	{
 		if ($this->connectionId) {
