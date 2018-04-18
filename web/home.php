@@ -261,7 +261,7 @@ $pass = $_SESSION['ftp_pass'];
 			    	dirCopiados += arrayDirActual[i];
 				}
 				actualizarBotones();
-				cortar = false;
+				cortar = "false";
 
 			}
 
@@ -274,7 +274,7 @@ $pass = $_SESSION['ftp_pass'];
 			    	dirCopiados += arrayDirActual[i];
 				}
 				actualizarBotones();
-				cortar = true;
+				cortar = "true";
 
 			}
 

@@ -35,7 +35,7 @@ foreach($archivos as $archivo){
 	$nombreArchivo = end($tmp);
 	echo '<br>$nombreArchivo: ' . $nombreArchivo;
 	$ftpObj -> copyPaste($nombreArchivo, $dirCopiados, $dirDestino);
-	if($cortar == true){ //Si la opcion de pegado es cortar
+	if($cortar == "true"){ //Si la opcion de pegado es cortar
 		$ftpObj -> changeDir($dirCopiados);
 		$ftpObj -> deleteFile($nombreArchivo); //Borrar el archivo original
 	}
