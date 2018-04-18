@@ -7,7 +7,8 @@ if (session_status() == PHP_SESSION_NONE) {
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Inicio</title>
+		<title>Inicio | SACTA FTP</title>
+		<link rel="shortcut icon" href="img/logoSACTA_64x64.ico" type="image/x-icon"/>
 		<meta charset="utf-8">
 		<!-- Importar iconos de google.-->
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
