@@ -47,7 +47,7 @@ $pass = $_SESSION['ftp_pass'];
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="pegarArchivos()" id="btnPegar"><i class="material-icons left white-text">content_paste</i>Pegar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCrearCarpeta" id="btnNuevaCarpeta"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalBorrar" onclick="mostrarArchivosABorrar()" id="btnBorrar"><i class="material-icons left white-text">delete</i>Borrar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalRenombrar" onclick="mostrarArchivoARenombrar()" id="btnRenombrar"><i class="material-icons left white-text">edit</i>Renombrar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalRenombrar" id="btnRenombrar"><i class="material-icons left white-text">edit</i>Renombrar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCompartir" onclick="mostrarArchivosACompartir()" id="btnCompartir"><i class="material-icons left white-text">share</i>Compartir</a>
 		</div>
 
@@ -113,10 +113,10 @@ $pass = $_SESSION['ftp_pass'];
 			    <div class="modal-content">
 			      	<h4>Renombrar Archivo</h4>
 			      	Nombre antiguo:
-			      	<div id="nombreAntiguo">          
+			      	<div class="input-field" id="nombreAntiguo">          
 			        </div>
 			      	<div class="input-field">
-			            <input id="nombreNuevo" type="text" name="nombreNuevo" required> 
+			            <input id="nombreNuevo" type="text" name="nombreNuevo" value="Nombre nuevo aqui"required> 
 			            <label for="nombreNuevo">Nombre nuevo</label>		            
 			        </div>  	
 			    </div>
@@ -212,6 +212,7 @@ $pass = $_SESSION['ftp_pass'];
 				actualizarBotones();
 			});
 
+			//Cada vez que seleccionas un elemento (check/uncheck)
 			$(document).on('change', '.CBelemento', function (){
 				
 				//Armar directorio actual
@@ -239,6 +240,11 @@ $pass = $_SESSION['ftp_pass'];
 				}
 				console.log("Elementos checked: " + stringElementos);
 
+				if(aLenE != 0){
+					console.log("Elemento a renombrar mostrado");
+					mostrarElementoARenombrar();
+				}
+				
 				actualizarBotones();
 			});
 
@@ -378,7 +384,7 @@ $pass = $_SESSION['ftp_pass'];
 				}
 			}
 
-			function mostrarArchivoARenombrar(){
+			function mostrarElementoARenombrar(){
 				//Obtener el div para mostrar el nombre del elemento
 				var div = document.getElementById("nombreAntiguo");
 
