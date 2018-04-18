@@ -44,8 +44,8 @@ $pass = $_SESSION['ftp_pass'];
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="copiarArchivos()" id="btnCopiar"><i class="material-icons left white-text">file_copy</i>Copiar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="cortarArchivos()" id="btnCortar"><i class="material-icons left white-text">content_cut</i>Cortar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="pegarArchivos()" id="btnPegar"><i class="material-icons left white-text">content_paste</i>Pegar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal1" id="btnNuevaCarpeta"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
-				<a class="waves-effect waves-light btn-flat white-text s1" href="#modal2" onclick="mostrarArchivosABorrar()" id="btnBorrar"><i class="material-icons left white-text">delete</i>Borrar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCrearCarpeta" id="btnNuevaCarpeta"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalBorrar" onclick="mostrarArchivosABorrar()" id="btnBorrar"><i class="material-icons left white-text">delete</i>Borrar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCompartir" onclick="mostrarArchivosACompartir()" id="btnCompartir"><i class="material-icons left white-text">share</i>Compartir</a>
 		</div>
 
@@ -64,7 +64,7 @@ $pass = $_SESSION['ftp_pass'];
         <!-- Modals -->
 
 		  <!-- Modal Crear Carpeta -->
-		<div id="modal1" class="modal">
+		<div id="modalCrearCarpeta" class="modal">
 			<form action="script/data/nuevaCarpeta.php" method="POST">
 			    <div class="modal-content">
 			      	<h4>Crear nueva carpeta</h4>
@@ -89,7 +89,7 @@ $pass = $_SESSION['ftp_pass'];
 		</div>
 
 		<!-- Modal Borrar Archivos -->
-		<div id="modal2" class="modal">
+		<div id="modalBorrar" class="modal">
 		    <div class="modal-content">
 		      	<h4>Borrar archivo</h4>
 		        Los siguientes archivos se borrarán:
@@ -163,11 +163,9 @@ $pass = $_SESSION['ftp_pass'];
 			    	dirActual += arrayDirActual[i];
 				}
 				console.log(dirActual);
-				$.post("script/data/obtenerArchivos.php", { dir: dirActual }).done(function(data, status){
-					$("#divArchivos").empty();
-					$("#divArchivos").append(data);
-				});
+				obtenerArchivos();
 				document.getElementById("dir").innerHTML = dirActual;
+
 				//Cambiar los inputs escondidos
 				document.getElementById("dirSubir").value = dirActual;
 				document.getElementById("dirNuevaCarpeta").value = dirActual;
@@ -239,7 +237,12 @@ $pass = $_SESSION['ftp_pass'];
 				$.post("script/data/borrarArchivos.php", { archivos: arrayElementosChecked }).done(function(data, status){
 					//$("#divArchivos").empty();
 					//$("#divArchivos").append(data);
-					location.reload();
+					//location.reload();
+					obtenerArchivos();
+					arrayElementosChecked = [];
+					$('#modalBorrar').modal('close'); //Cierra el modal Borrar
+					document.getElementById("archivosABorrar").innerHTML = ""; // Borra el texto del modal
+					actualizarBotones();
 				});
 			}
 
@@ -288,7 +291,13 @@ $pass = $_SESSION['ftp_pass'];
 				$.post("script/data/pegarArchivos.php", { archivos: arrayElementosCopiados, dirCopiados: dirCopiados, dirDestino: dirActual, cortar: cortar }).done(function(data, status){
 					//$("#divArchivos").empty();
 					//$("#divArchivos").append(data);
-					location.reload();
+					//location.reload();
+					obtenerArchivos();
+					arrayElementosCopiados = [];
+					arrayElementosChecked = [];
+					dirCopiados = "";
+					cortar = "false";
+					actualizarBotones();
 				});
 			}
 
@@ -356,6 +365,20 @@ $pass = $_SESSION['ftp_pass'];
 					$(btnPegar).show();
 				}
 			}
+
+			function obtenerArchivos(){
+				//Armar directorio actual
+				var dirActual = "";
+				aLen = arrayDirActual.length;
+				for (i = 0; i < aLen; i++) {
+			    	dirActual += arrayDirActual[i];
+				}
+
+				$.post("script/data/obtenerArchivos.php", { dir: dirActual }).done(function(data, status){
+					$("#divArchivos").empty();
+					$("#divArchivos").append(data);
+				});
+			}
 				
 
 		  	$(document).ready(function(){
@@ -365,7 +388,7 @@ $pass = $_SESSION['ftp_pass'];
 		    	$('.modal').modal();
 
 		    	if($("#divArchivos").text()== ""){
-		    		$("#divArchivos").load("script/data/obtenerArchivos.php");
+		    		obtenerArchivos();
 		    	}
 				
 		  	});   
