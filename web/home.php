@@ -332,9 +332,12 @@ $pass = $_SESSION['ftp_pass'];
 				arrayElementosCopiados = arrayElementosChecked;
 				//Guardar directorio de elementos a copiar
 				dirCopiados = "";
+				aLen = arrayDirActual.length;
 				for (i = 0; i < aLen; i++) {
 			    	dirCopiados += arrayDirActual[i];
+
 				}
+				console.log("dirCopiados: " + dirCopiados);
 				actualizarBotones();
 				cortar = "false";
 
@@ -345,6 +348,7 @@ $pass = $_SESSION['ftp_pass'];
 				arrayElementosCopiados = arrayElementosChecked;
 				//Guardar directorio de elementos a copiar
 				dirCopiados = "";
+				aLen = arrayDirActual.length;
 				for (i = 0; i < aLen; i++) {
 			    	dirCopiados += arrayDirActual[i];
 				}
