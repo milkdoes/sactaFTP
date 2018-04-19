@@ -262,19 +262,26 @@ $pass = $_SESSION['ftp_pass'];
 			function descargarArchivos(){
 				//Armar directorio actual
 				var dirActual = "";
+				var archivos = "";
 				aLen = arrayDirActual.length;
 				for (i = 0; i < aLen; i++) {
 			    	dirActual += arrayDirActual[i];
 				}
+
+				sLen = arrayElementosChecked.length;
+				for (i = 0; i < sLen; i++) {
+			    	archivos += arrayElementosChecked[i];
+			    	archivos += "-";
+				}
 				document.getElementById("dirDescarga").value = dirActual;
-				document.getElementById("archivos").value = arrayElementosChecked[0];
+				document.getElementById("archivos").value = archivos;
 				document.getElementById("descargarArchivos").submit();
-				$.post("script/data/descargarArchivos.php", { archivos: arrayElementosChecked, dir: dirActual }).done(function(data, status){
-					// $("#divArchivos").empty();
-					// $("#divArchivos").append(data);
-					console.log("Entra");
-					location.reload();
-				});
+				// $.post("script/data/descargarArchivos.php", { archivos: arrayElementosChecked, dir: dirActual }).done(function(data, status){
+				// 	// $("#divArchivos").empty();
+				// 	// $("#divArchivos").append(data);
+				// 	console.log("Entra");
+				// 	location.reload();
+				// });
 			}
 
 			function borrarArchivos(){
@@ -470,6 +477,7 @@ $pass = $_SESSION['ftp_pass'];
 				if(carpetaSeleccionada == true){
 					$(btnCopiar).hide();
 					$(btnCortar).hide();
+					$(btnDescargar).hide();
 				}
 
 			}

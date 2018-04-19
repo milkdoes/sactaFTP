@@ -6,10 +6,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 $user = $_SESSION['ftp_user'];
 $pass = $_SESSION['ftp_pass'];
-// $file = "/tmp/descargar.php";
-// header("Content-disposition: attachment; filename=$descargar.php");
-// header("Content-type: application/octet-stream");
-// readfile($file);
+
 
 
 // *** Include the class.
@@ -29,18 +26,38 @@ if(isset($_POST['dirDescarga'])){
 
 //Descargar archivo
 $archivos = $_POST['archivos'];
-/*var_dump($_POST['archivos']);
-foreach($archivos as $fileFrom){
-	*/
+$arrayArchivos = explode("-", $archivos);
+array_pop($arrayArchivos);
 
-	$tmp = explode("/", $archivos);
+//Si es un solo archivo
+if(count($arrayArchivos) == 1){
+
+ 	$tmp = explode("/", $arrayArchivos[0]);
 	$nombreArchivo = end($tmp);
-	$ftpObj -> downloadFile($nombreArchivo, "/tmp/" . $nombreArchivo);
+ 	$ftpObj -> downloadFile($nombreArchivo, "/tmp/" . $nombreArchivo);
 
-	header("Content-disposition: attachment; filename=$nombreArchivo");
-	header("Content-type: application/octet-stream");
-	readfile("/tmp/" . $nombreArchivo);
-//}
+ 	header("Content-Type: application/file");
+    header("Content-Transfer-Encoding: Binary");
+    header("Content-Disposition: attachment; filename=$nombreArchivo");
+  	readfile("/tmp/" . $nombreArchivo);
+
+//Si son 2 o mas a descargar (ZIP)
+} else {
+	$nombreZip = $user . date("Y-m-d-h-i-s") . ".zip";
+	$ejecutar = "zip -j /tmp/" . $nombreZip . " ";
+
+	foreach ($arrayArchivos as $archivos) {
+		$ejecutar .=  "/home/vsftpd/ftp/". $user . $archivos . " ";
+	}
+	exec($ejecutar);
+
+  	header("Content-Type: application/zip");
+    header("Content-Transfer-Encoding: Binary");
+    header("Content-Disposition: attachment; filename=$nombreZip");
+  	readfile("/tmp/" . $nombreZip);
+
+}
+
 
 
 
