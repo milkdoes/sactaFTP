@@ -41,9 +41,11 @@ do
 		cp -aln "$rutaActual" "$directorioHuespedPatrocinador"
 	fi
 
-	# Crear vinculo fuerte a cada archivo del directorio si es un directorio.
+	# Copiar directorio a ruta si es un directorio.
 	if [ -d "$rutaActual" ]
 	then
-		cp -arn "$rutaActual" "$directorioHuespedPatrocinador"
+		# Guardar ruta sin diagonal final.
+		rutaDirectorio=${rutaActual::-1}
+		cp -alnr "$rutaDirectorio" "$directorioHuespedPatrocinador"
 	fi
 done
