@@ -36,9 +36,12 @@ if(count($arrayArchivos) == 1){
 	$nombreArchivo = end($tmp);
  	$ftpObj -> downloadFile($nombreArchivo, "/tmp/" . $nombreArchivo);
 
+ 	$nombre = '"' . $nombreArchivo . '"';
+
+
  	header("Content-Type: application/file");
     header("Content-Transfer-Encoding: Binary");
-    header("Content-Disposition: attachment; filename=$nombreArchivo");
+    header("Content-Disposition: attachment; filename=$nombre");
   	readfile("/tmp/" . $nombreArchivo);
 
 //Si son 2 o mas a descargar (ZIP)
@@ -47,6 +50,7 @@ if(count($arrayArchivos) == 1){
 	$ejecutar = "zip -j /tmp/" . $nombreZip . " ";
 
 	foreach ($arrayArchivos as $archivos) {
+		$archivos = "'" . $archivos . "'";
 		$ejecutar .=  "/home/vsftpd/ftp/". $user . $archivos . " ";
 	}
 	exec($ejecutar);
