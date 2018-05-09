@@ -41,7 +41,7 @@ $pass = $_SESSION['ftp_pass'];
 				</form>
 				<!--<a class="waves-effect waves-light btn-flat white-text s1"><i class="material-icons left white-text">file_upload</i>Subir</a>-->
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="descargarArchivos()" id="btnDescargar"><i class="material-icons left white-text">file_download</i>Descargar</a>
-				<a class="waves-effect waves-light btn-flat white-text s1" onclick="copiarArchivos()" id="btnCopiar"><i class="material-icons left white-text">file_copy</i>Copiar</a>
+				<a class="waves-effect waves-light btn-flat white-text s1" onclick="copiarArchivos()" id="btnCopiar"><i class="material-icons left white-text">content_copy</i>Copiar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="cortarArchivos()" id="btnCortar"><i class="material-icons left white-text">content_cut</i>Cortar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" onclick="pegarArchivos()" id="btnPegar"><i class="material-icons left white-text">content_paste</i>Pegar</a>
 				<a class="waves-effect waves-light btn-flat white-text s1" href="#modalCrearCarpeta" id="btnNuevaCarpeta"><i class="material-icons left white-text">create_new_folder</i>Nueva carpeta</a>
@@ -165,6 +165,9 @@ $pass = $_SESSION['ftp_pass'];
 		        <div class="card-panel gray">
 		          	<span class="blue-text">Subida en proceso...
 		          	</span>
+		          	<div class="progress">
+					    <div class="indeterminate"></div>
+					</div>
 		        </div>
 		    </div>
 	    </div>
