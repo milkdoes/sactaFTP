@@ -294,7 +294,10 @@ $pass = $_SESSION['ftp_pass'];
 						arrayElementosChecked = [];
 						$('#modalRenombrar').modal('close'); //Cierra el modal Renombrar
 						actualizarBotones();
-						Materialize.toast("Archivo " + $("#ArchivoSubidaFtpTexto").val() + " subido correctamente.", 4000);
+						if(mensaje == "1"){
+							Materialize.toast("Archivo " + $("#ArchivoSubidaFtpTexto").val() + " subido correctamente.", 4000);
+						} else { Materialize.toast("Error al subir " + $("#ArchivoSubidaFtpTexto").val() + ".", 4000); }
+						
 					}, complete: function() {
 						$("#divSubida").hide();
 						$("#ArchivoSubidaFtpTexto").val(" ");
