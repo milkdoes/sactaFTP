@@ -27,16 +27,13 @@ $pass = $_SESSION['ftp_pass'];
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	</head>
 	<body>
-        <div class = 'usuario'>
-			<a class = 'letraUsuario'><?php echo $_SESSION['ftp_user'];?></a>
-		</div>
         <div id="header"></div>
 		<!--Botones de funciones FTP-->
 		<div class="row center blue-grey darken-2">
 				<form action="script/data/subir.php" method="post" enctype="multipart/form-data" id="archivo">
 					<a class="file-field input-field waves-effect waves-light btn-flat white-text s1"  id="btnSubir">
 						<i class="material-icons left white-text">file_upload</i>Subir
-						<input type="file" multiple name="fileToUpload" id="fileToUpload" onchange="subir()">
+						<input type="file" name="fileToUpload" id="fileToUpload" onchange="subir()">
 					</a>
 					<input type="hidden" name="dir" value="/" id="dirSubir"/>
 				</form>
@@ -155,11 +152,20 @@ $pass = $_SESSION['ftp_pass'];
 
 		<form action="script/data/descargarArchivos.php" method="post" enctype="multipart/form-data" id="descargarArchivos" hidden>
 
-		<input type="text" name="archivos" id ="archivos">
-		
-		<input type="text" name="dirDescarga" id ="dirDescarga">
+			<input type="text" name="archivos" id ="archivos">
+			
+			<input type="text" name="dirDescarga" id ="dirDescarga">
 
 		</form>
+
+		<div class="row" id="divSubida">
+		    <div class="col s12 m5">
+		        <div class="card-panel gray">
+		          	<span class="blue-text">Subida en proceso...
+		          	</span>
+		        </div>
+		    </div>
+	    </div>
 
 		<div id="footer"></div>
 		<!-- Scripts. -->
@@ -255,8 +261,36 @@ $pass = $_SESSION['ftp_pass'];
 				for (i = 0; i < aLen; i++) {
 			    	dirActual += arrayDirActual[i];
 				}
+				//var fileToUpload = $("#fileToUpload").value;
+
 				//Hacer submit del form (post)
-				document.getElementById("archivo").submit();
+				//document.getElementById("archivo").submit();
+
+				// Obtener propiedades de archivo.
+				const archivo = $("#fileToUpload").prop("files")[0];
+				let dataForma = new FormData();
+				dataForma.append("fileToUpload", archivo);
+				dataForma.append("dir", dirActual);
+
+				// Subir archivo con llamada al servidor.
+				$.ajax({
+					url: "script/data/subir.php",
+					dataType: 'script',
+					cache: false,
+					contentType: false,
+					processData: false,
+					data: dataForma,
+					type: 'post',
+					success: function(mensaje) {
+						// Alertar sobre estatus de subida.
+						alert(mensaje);
+					}, complete: function() {
+						// // Limpiar ingreso para archivo actual.
+						// $(window.ARCHIVO_SUBIDA_FTP_ID).val("");
+						// $(window.ARCHIVO_SUBIDA_FTP_TEXTO_ID).val("");
+					}
+				});
+
 			}
 
 			function descargarArchivos(){
@@ -503,6 +537,8 @@ $pass = $_SESSION['ftp_pass'];
 
 		  	$(document).ready(function(){
 		  		actualizarBotones();
+
+		  		$('a#aUsername').text("<?php echo $user; ?>");
 
 		    	// the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
 		    	$('.modal').modal();

@@ -6,11 +6,19 @@ td, th {
     background-color: #0091ea;
 }
 
-.letraUsuario{
+/*.letraUsuario{
     color:white;
     float:right;
-}
+    margin: 10px;
+}*/
 
 a {
 	cursor: pointer;
+}
+
+div#divSubida{
+	position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 30%;
 }

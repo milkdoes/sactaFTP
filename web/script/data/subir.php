@@ -19,8 +19,12 @@ $conexion = $ftpObj -> connect('localhost', $user, $pass);
 
 //Subir archivo
 $fileFrom = $_FILES["fileToUpload"]["tmp_name"];
-$fileTo =  $dir . $_FILES["fileToUpload"]["name"];
+$fileTo =  $dir . basename($_FILES["fileToUpload"]["name"]);
+$archivoNoSubido = true;
 $ftpObj -> uploadFile($fileFrom, $fileTo);
+// while ($archivoNoSubido) {
+// 	$archivoNoSubido = ! ($ftpObj -> uploadFile($fileFrom, $fileTo));
+// }
 
-header('Location: ../../home.php');
+//header('Location: ../../home.php');
 ?>
