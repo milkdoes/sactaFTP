@@ -1,0 +1,9 @@
+abrir /etc/php/<version>/cli/php.ini
+cambiar upload_max_filesize y post_max_size a 25M
+
+tambien
+abrir /etc/php/<version>/apache2/php.ini
+cambiar upload_max_filesize y post_max_size a 25M
+
+sudo service apache2 stop
+sudo service apache2 start

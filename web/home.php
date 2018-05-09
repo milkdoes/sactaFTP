@@ -255,6 +255,7 @@ $pass = $_SESSION['ftp_pass'];
 			});
 
 			function subir(){
+				$("#divSubida").show();
 				//Armar string de directorio actual
 				var dirActual = "";
 				aLen = arrayDirActual.length;
@@ -283,8 +284,13 @@ $pass = $_SESSION['ftp_pass'];
 					type: 'post',
 					success: function(mensaje) {
 						// Alertar sobre estatus de subida.
-						alert(mensaje);
+						//alert(mensaje);
+						obtenerArchivos();
+						arrayElementosChecked = [];
+						$('#modalRenombrar').modal('close'); //Cierra el modal Renombrar
+						actualizarBotones();
 					}, complete: function() {
+						$("#divSubida").hide();	
 						// // Limpiar ingreso para archivo actual.
 						// $(window.ARCHIVO_SUBIDA_FTP_ID).val("");
 						// $(window.ARCHIVO_SUBIDA_FTP_TEXTO_ID).val("");
@@ -537,6 +543,8 @@ $pass = $_SESSION['ftp_pass'];
 
 		  	$(document).ready(function(){
 		  		actualizarBotones();
+
+		  		$("#divSubida").hide(); //Esconder el div de mensaje al subir un archivo.
 
 		  		$('a#aUsername').text("<?php echo $user; ?>");
 

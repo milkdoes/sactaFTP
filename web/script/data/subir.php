@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 // Start session if it has not already started.
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
