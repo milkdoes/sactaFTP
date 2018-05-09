@@ -24,13 +24,28 @@ if(isset($_POST['dirDescarga'])){
 	$ftpObj -> changeDir($dir);
 }
 
+$directorio = "/home/vsftpd/ftp/" . $user . $dir;
+
+$arrayDir = explode("/", $directorio);
+
+
+
 //Descargar archivo
 $archivos = $_POST['archivos'];
 $arrayArchivos = explode("-", $archivos);
 array_pop($arrayArchivos);
 
+$carpeta = 0;
+
+foreach ($arrayArchivos as $archivos) {
+	if (substr($archivos, -1) == "/"){
+		$carpeta = 1;
+	}
+}
+
+
 //Si es un solo archivo
-if(count($arrayArchivos) == 1){
+if(count($arrayArchivos) == 1 && $carpeta == 0){
 
  	$tmp = explode("/", $arrayArchivos[0]);
 	$nombreArchivo = end($tmp);
@@ -38,22 +53,23 @@ if(count($arrayArchivos) == 1){
 
  	$nombre = '"' . $nombreArchivo . '"';
 
-
  	header("Content-Type: application/file");
     header("Content-Transfer-Encoding: Binary");
     header("Content-Disposition: attachment; filename=$nombre");
   	readfile("/tmp/" . $nombreArchivo);
 
 //Si son 2 o mas a descargar (ZIP)
-} else {
+} else{
 	$nombreZip = $user . date("Y-m-d-h-i-s") . ".zip";
-	$ejecutar = "zip -j /tmp/" . $nombreZip . " ";
+	$ejecutar = "zip -r /tmp/" . $nombreZip . " ";
+
 
 	foreach ($arrayArchivos as $archivos) {
-		$archivos = "'" . $archivos . "'";
-		$ejecutar .=  "/home/vsftpd/ftp/". $user . $archivos . " ";
+		$ejecutar .=  "'" . substr($archivos, 1) . "' ";
 	}
-	exec($ejecutar);
+	$exec = "cd " . $directorio . "; " . $ejecutar;
+	exec($exec);
+
 
   	header("Content-Type: application/zip");
     header("Content-Transfer-Encoding: Binary");
@@ -61,6 +77,7 @@ if(count($arrayArchivos) == 1){
   	readfile("/tmp/" . $nombreZip);
 
 }
+
 
 
 
