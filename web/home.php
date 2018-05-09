@@ -19,7 +19,8 @@ $pass = $_SESSION['ftp_pass'];
 		<link rel="shortcut icon" href="img/logoSACTA_64x64.ico" type="image/x-icon"/>
 		<meta charset="utf-8">
 		<!-- Importar iconos de google.-->
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!-- <link href="img/MaterialIcons-Regular.tff" rel="stylesheet"> -->
+		<link type="text/css" rel="stylesheet" href="css/material-icons.css"/>
 		<!-- Importar materialize.css-->
 		<link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
 		<link type="text/css" rel="stylesheet" href="css/home.css"/>
@@ -27,13 +28,14 @@ $pass = $_SESSION['ftp_pass'];
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	</head>
 	<body>
-        <div id="header"></div>
+        <div id="headerHome"></div>
 		<!--Botones de funciones FTP-->
 		<div class="row center blue-grey darken-2">
 				<form action="script/data/subir.php" method="post" enctype="multipart/form-data" id="archivo">
 					<a class="file-field input-field waves-effect waves-light btn-flat white-text s1"  id="btnSubir">
 						<i class="material-icons left white-text">file_upload</i>Subir
 						<input type="file" name="fileToUpload" id="fileToUpload" onchange="subir()">
+						<input id="ArchivoSubidaFtpTexto" class="file-path validate" type="hidden">
 					</a>
 					<input type="hidden" name="dir" value="/" id="dirSubir"/>
 				</form>
@@ -289,8 +291,10 @@ $pass = $_SESSION['ftp_pass'];
 						arrayElementosChecked = [];
 						$('#modalRenombrar').modal('close'); //Cierra el modal Renombrar
 						actualizarBotones();
+						Materialize.toast("Archivo " + $("#ArchivoSubidaFtpTexto").val() + " subido correctamente.", 4000);
 					}, complete: function() {
-						$("#divSubida").hide();	
+						$("#divSubida").hide();
+						$("#ArchivoSubidaFtpTexto").val(" ");
 						// // Limpiar ingreso para archivo actual.
 						// $(window.ARCHIVO_SUBIDA_FTP_ID).val("");
 						// $(window.ARCHIVO_SUBIDA_FTP_TEXTO_ID).val("");
@@ -521,7 +525,7 @@ $pass = $_SESSION['ftp_pass'];
 				if(carpetaSeleccionada == true){
 					$(btnCopiar).hide();
 					$(btnCortar).hide();
-					$(btnDescargar).hide();
+					//$(btnDescargar).hide();
 				}
 
 			}
@@ -539,14 +543,11 @@ $pass = $_SESSION['ftp_pass'];
 					$("#divArchivos").append(data);
 				});
 			}
-				
 
 		  	$(document).ready(function(){
 		  		actualizarBotones();
 
 		  		$("#divSubida").hide(); //Esconder el div de mensaje al subir un archivo.
-
-		  		$('a#aUsername').text("<?php echo $user; ?>");
 
 		    	// the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
 		    	$('.modal').modal();
