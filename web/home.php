@@ -34,7 +34,7 @@ $pass = $_SESSION['ftp_pass'];
 				<form action="script/data/subir.php" method="post" enctype="multipart/form-data" id="archivo">
 					<a class="file-field input-field waves-effect waves-light btn-flat white-text s1"  id="btnSubir">
 						<i class="material-icons left white-text">file_upload</i>Subir
-						<input type="file" name="fileToUpload" id="fileToUpload" onchange="subir()">
+						<input type="file" name="fileToUpload" id="fileToUpload" onchange="comprobarNombreSubir()">
 						<input id="ArchivoSubidaFtpTexto" class="file-path validate" type="hidden">
 					</a>
 					<input type="hidden" name="dir" value="/" id="dirSubir"/>
@@ -152,14 +152,37 @@ $pass = $_SESSION['ftp_pass'];
 			<!--</form>-->
 		</div>
 
+		<!-- Modal Subir archivo repetido -->
+		<div id="modalSubirRepetido" class="modal">
+			<!--<form action="script/data/compartir.php" method="POST">-->
+			    <div class="modal-content">
+			      	<h4>Subir Archivo</h4>
+			      	El archivo <span id="spanArchivoRepetido">nombre archivo</span> ya existe en esta carpeta. Selecciona una opci&oacute;n:
+			    	<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
+						<button class="btn waves-effect waves-light" name="action" onclick="subir()">Remplazar
+				  		</button>
+					</div>
+					<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
+						<button class="modal-action modal-close btn waves-effect waves-light" name="action">No subir
+				  		</button>
+					</div>
+					<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
+						<button class="btn waves-effect waves-light" name="action" onclick="subir('repetido')">Mantener los dos archivos (subir como <span id="spanNuevoNombre">nombrearchivo.txt</span>)
+				  		</button>
+					</div>
+			    </div>
+			    <div class="modal-footer">
+			      	<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
+			    </div>
+			<!--</form>-->
+		</div>
+
 		<form action="script/data/descargarArchivos.php" method="post" enctype="multipart/form-data" id="descargarArchivos" hidden>
-
 			<input type="text" name="archivos" id ="archivos">
-			
 			<input type="text" name="dirDescarga" id ="dirDescarga">
-
 		</form>
 
+		<!-- Div de subida en proceso al subir un archivo -->
 		<div class="row" id="divSubida">
 		    <div class="col s12 m5">
 		        <div class="card-panel gray">
@@ -183,7 +206,7 @@ $pass = $_SESSION['ftp_pass'];
 			var arrayElementosCopiados = [];
 			var dirCopiados = "";
 			var cortar = false;
-
+			var arrayArchivosEnCarpeta = [];
 			actualizarBotones();
 
 			//Para funciones de renombrado de elementos
@@ -259,7 +282,56 @@ $pass = $_SESSION['ftp_pass'];
 				actualizarBotones();
 			});
 
-			function subir(){
+			function comprobarNombreSubir(){
+				//Obtener el nombre del archivo a subir
+				var rutaFileToUpload = $("#fileToUpload").val().split("\\");
+				var fileToUpload = rutaFileToUpload[rutaFileToUpload.length-1];
+				
+				//Comprobar si hay un archivo que se llame igual al que se quiere subir
+				if(arrayArchivosEnCarpeta.includes(fileToUpload)){
+					//Escribir el nombre del archivo en el modal
+					$("#spanArchivoRepetido").text(fileToUpload);
+
+					//Generar nuevo nombre con numero
+					var n = 1;
+					var nombreValido = false;
+					var nuevoNombre = "";
+					while(nombreValido == false){
+						n++;
+						rutaFileToUpload = fileToUpload.split(".");
+
+						var dotIndex = fileToUpload.lastIndexOf(".");
+						//Renombrar el archivo con un numero y parentesis
+					    if (dotIndex == -1) { 
+					    	nuevoNombre = fileToUpload + "(" + n + ")" 
+					    } else {
+					    	nuevoNombre = fileToUpload.substring(0, dotIndex) + "(" + n + ")" + fileToUpload.substring(dotIndex);
+					    }
+
+					    //Si el nuevo nombre generado tambien en la carpeta
+					    if(arrayArchivosEnCarpeta.includes(nuevoNombre)){
+					    	//Repite el ciclo
+
+					    } else {
+					    	//Rompe el ciclo
+					    	nombreValido = true;
+					    }
+					}
+
+					//Escribir el nombre nuevo del archivo a subir
+					$("#spanNuevoNombre").text(nuevoNombre);
+
+					//Abrir el modal
+					$('#modalSubirRepetido').modal('open');
+				} else {
+					subir();
+				}
+			}
+
+			function subir(opcion){
+				//Cerrar modal de subir archivo repetido
+				$('#modalSubirRepetido').modal('close');
+				//Mostrar div subida en proceso
 				$("#divSubida").show();
 				//Armar string de directorio actual
 				var dirActual = "";
@@ -273,10 +345,20 @@ $pass = $_SESSION['ftp_pass'];
 				//document.getElementById("archivo").submit();
 
 				// Obtener propiedades de archivo.
-				const archivo = $("#fileToUpload").prop("files")[0];
+				var archivo = $("#fileToUpload").prop("files")[0];
+
+				//Si la opcion de subida es mantener los dos archivos
+				var nuevoNombre = "";
+				if(opcion == 'repetido'){
+					//Asignar nuevo nombre
+					nuevoNombre = $("#spanNuevoNombre").text();
+				}
+
 				let dataForma = new FormData();
 				dataForma.append("fileToUpload", archivo);
 				dataForma.append("dir", dirActual);
+				dataForma.append("opcion", opcion);
+				dataForma.append("nuevoNombre", nuevoNombre);
 
 				// Subir archivo con llamada al servidor.
 				$.ajax({
@@ -295,7 +377,13 @@ $pass = $_SESSION['ftp_pass'];
 						$('#modalRenombrar').modal('close'); //Cierra el modal Renombrar
 						actualizarBotones();
 						if(mensaje == "1"){
-							Materialize.toast("Archivo " + $("#ArchivoSubidaFtpTexto").val() + " subido correctamente.", 4000);
+							//Mostrar mensaje con nombre de archivo
+							if(opcion == 'repetido') //Si es un nombre generado
+							{
+								Materialize.toast("Archivo " + nuevoNombre + " subido correctamente.", 4000);
+							} else { //Si no se genero ningun nombre
+								Materialize.toast("Archivo " + $("#ArchivoSubidaFtpTexto").val() + " subido correctamente.", 4000);
+							}
 						} else { Materialize.toast("Error al subir " + $("#ArchivoSubidaFtpTexto").val() + ".", 4000); }
 						
 					}, complete: function() {
@@ -547,6 +635,7 @@ $pass = $_SESSION['ftp_pass'];
 				$.post("script/data/obtenerArchivos.php", { dir: dirActual }).done(function(data, status){
 					$("#divArchivos").empty();
 					$("#divArchivos").append(data);
+					arrayArchivosEnCarpeta = $("#archivosEnCarpeta").val().split(";");
 				});
 			}
 
@@ -558,9 +647,7 @@ $pass = $_SESSION['ftp_pass'];
 		    	// the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
 		    	$('.modal').modal();
 
-		    	if($("#divArchivos").text()== ""){
-		    		obtenerArchivos();
-		    	}
+		    	obtenerArchivos();
 				
 		  	});   
 		</script>

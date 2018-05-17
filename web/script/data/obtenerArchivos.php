@@ -115,3 +115,15 @@ if(count($contentsArray) == 2){
   <?php         
 }
 ?>
+<input id="archivosEnCarpeta" type="hidden" value="
+<?php
+//Imprimir lista de archivos en la carpeta dentro de un input escondido
+foreach($contentsArray as $archivo){
+  $datos = preg_split('/\s+/', $archivo);
+  if(!($datos[8] == "./") && !($datos[8] == "../" && $dir == "/")){
+    $datos[8] = implode(" ", array_slice($datos, 8)); //Juntar las palabras que componen el nombre del archivo o carpeta
+    echo $datos[8] . ";";
+  }
+}
+?>
+">
