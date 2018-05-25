@@ -22,3 +22,7 @@ div#divSubida{
     right: 0;
     width: 30%;
 }
+
+.no-uppercase {
+     text-transform: none;
+}

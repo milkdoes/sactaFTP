@@ -159,15 +159,15 @@ $pass = $_SESSION['ftp_pass'];
 			      	<h4>Subir Archivo</h4>
 			      	El archivo <span id="spanArchivoRepetido">nombre archivo</span> ya existe en esta carpeta. Selecciona una opci&oacute;n:
 			    	<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
-						<button class="btn waves-effect waves-light" name="action" onclick="subir()">Remplazar
+						<button class="btn waves-effect waves-light no-uppercase" name="action" onclick="subir()">Remplazar
 				  		</button>
 					</div>
 					<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
-						<button class="modal-action modal-close btn waves-effect waves-light" name="action">No subir
+						<button class="modal-action modal-close btn waves-effect waves-light no-uppercase" name="action">No subir
 				  		</button>
 					</div>
 					<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
-						<button class="btn waves-effect waves-light" name="action" onclick="subir('repetido')">Mantener los dos archivos (subir como <span id="spanNuevoNombre">nombrearchivo.txt</span>)
+						<button class="btn waves-effect waves-light no-uppercase" name="action" onclick="subir('repetido')">Mantener los dos archivos (subir como <span id="spanNuevoNombre">nombrearchivo.txt</span>)
 				  		</button>
 					</div>
 			    </div>
