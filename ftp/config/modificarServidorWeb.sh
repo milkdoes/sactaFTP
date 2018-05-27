@@ -38,3 +38,22 @@ TEXTO_USUARIO_WEB_TTY="Defaults:$USUARIO_WEB !requiretty"
 grep -q -F "$TEXTO_USUARIO_WEB_TTY" "$ARCHIVO_SUDOERS" || echo -e "$TEXTO_USUARIO_WEB_TTY" >> "$ARCHIVO_SUDOERS"
 TEXTO_PERMISOS_USUARIO_WEB="$USUARIO_WEB ALL=($USUARIO) NOPASSWD: ALL"
 grep -q -F "$TEXTO_PERMISOS_USUARIO_WEB" "$ARCHIVO_SUDOERS" || echo -e "$TEXTO_PERMISOS_USUARIO_WEB" >> "$ARCHIVO_SUDOERS"
+
+# Editar los archivos de php.ini para incrementar el tamaño maximo de archivos
+# a subir.
+textoArchivosPhpIni="$(locate -r 'php.ini$')"
+for rutaArchivo in $textoArchivosPhpIni; do
+	# Eliminar bytes de nueva a linea a ruta.
+	nuevaRuta=${rutaArchivo//$'\n'/}
+
+	# Respaldar archivo en caso de cambio fallido/no deseado.
+	cp -n "$nuevaRuta" "$nuevaRuta.bak"
+
+	# Cambiar valores de variables.
+	sed -i -e 's/;\? *upload_max_filesize.*/upload_max_filesize = 25M/g' "$nuevaRuta"
+	sed -i -e 's/;\? *post_max_size.*/post_max_size = 25M/g' "$nuevaRuta"
+done
+
+# Reiniciar el servicio de apache.
+service apache2 stop
+service apache2 start
