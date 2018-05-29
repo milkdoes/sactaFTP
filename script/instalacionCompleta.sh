@@ -10,7 +10,10 @@ if [ "$EUID" -ne 0 ]
 fi
 
 # Correr todos los archivos en secuencia.
-bash ../ftp/instalacionFTP.sh
-cd ../ftp/config/
-bash configurarUsuariosVirtuales.sh
-bash modificarServidorWeb.sh
+directorioOriginal="$PWD"
+cd "../ftp/"
+bash "instalacionFTP.sh"
+cd "$directorioOriginal"
+cd "../ftp/config/"
+bash "configurarUsuariosVirtuales.sh"
+bash "modificarServidorWeb.sh"
