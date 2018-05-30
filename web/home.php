@@ -158,7 +158,7 @@ $pass = $_SESSION['ftp_pass'];
 			    <div class="modal-content">
 			      	<h4>Subir Archivo</h4>
 			      	El archivo <span id="spanArchivoRepetido">nombre archivo</span> ya existe en esta carpeta. Selecciona una opci&oacute;n:
-			    	<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
+			    	<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4 no-uppercase">
 						<button class="btn waves-effect waves-light no-uppercase" name="action" onclick="subir()">Remplazar
 				  		</button>
 					</div>
