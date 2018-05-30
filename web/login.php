@@ -18,7 +18,11 @@ if (session_status() == PHP_SESSION_NONE) {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	</head>
 	<body>
+		
 		<div id="header"></div>
+		<br>
+		<a class="waves-effect teal waves-light btn-flat white-text s1" href="#modalRegistrarse" id="btnNueva"><i class="material-icons left white-text">group_add</i>Registrarse</a>
+
 		<h2 class="row center">Inicio de sesi&oacute;n</h2>
 		<form action="script/data/loginCheck.php" method="POST">
 			<!-- Usuario y contraseña. -->
@@ -55,13 +59,59 @@ if (session_status() == PHP_SESSION_NONE) {
 			?>
 			<div id="footer"></div>
 		</form>
+		 <!-- Modal Crear Carpeta -->
+		<div id="modalRegistrarse" class="modal">
+			<form action="script/data/registrarse.php" onsubmit="return enviarCheck();"" method="POST">
+			    <div class="modal-content">
+			      	<h4>Registrarse</h4>
+			      	<div class="input-field">
+			            <input id="nombre" type="text" name="nombre" required> 
+			            <label for="nombre">Nombre</label>		            
+			        </div>
+			        <div class="input-field">
+			            <input id="pass1" type="password" name="pass1" required> 
+			            <label for="pass1">Contrasena</label>		            
+			        </div>
+			        <div class="input-field">
+			            <input id="pass2" type="password" name="pass2" required> 
+			            <label for="pass2">Repita la contrasena</label>		            
+			        </div>
+
+			    </div>
+			    <div class="modal-footer">
+			    	<div class="input-field col s4 m4 l4 push-s4 push-m4 push-l4">
+						<button class="btn waves-effect waves-light" type="submit" name="action">Registrarse
+				  		</button>
+					</div>
+			      	<a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
+			    </div>
+			</form>
+		</div>
 		<!-- Scripts. -->
 		<script type="text/javascript" src="script/plugin/jquery.min.js"></script>
 		<script type="text/javascript" src="script/plugin/materialize.min.js"></script>
 		<script type="text/javascript" src="script/page/ini.js"></script>
+		<script>
+		function enviarCheck(){
+			if($("#pass1").val() == $("#pass2").val() ){
+				return true;
+
+			} else {
+				alert("La contraseña no es igual.")
+				return false;
+			}
+		}
+		$(document).ready(function(){
+
+	    	// the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+	    	$('.modal').modal();
+			
+	  	});  
+		</script>
 	</body>
 </html>
 <?php
+
 function DestroySession()
 {
 	// Define if all operations are successful.
