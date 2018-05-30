@@ -39,4 +39,6 @@ if ($parametrosValidos) {
 
 // Desplegar json.
 echo json_encode($json);
+
+header('Location: ../../home.php');
 ?> 
