@@ -5,8 +5,8 @@
 
 # Verificar si usuario es super usuario. Si no salir.
 if [ "$EUID" -ne 0 ]
-	then echo "Por favor correr como superusuario (sudo)."
-	exit
+       then echo "Por favor correr como superusuario (sudo)."
+       exit
 fi
 
 # CONSTANTES.
@@ -65,6 +65,3 @@ chown -R "$USUARIO_FTP:nogroup" "$DIRECTORIO_VIRTUAL"
 
 # Permitir escritura en directorio de usuario virtual.
 chmod 757 -R "$DIRECTORIO_VIRTUAL"
-
-# Reiniciar servicio de vsftpd.
-service vsftpd restart

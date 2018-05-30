@@ -28,10 +28,10 @@ $json = array(
 // validos.
 if ($parametrosValidos) {
 	// Ejecutar creacion/reemplazo de usuario.
-	$parametros = "\"$usuario\" \"$contrasena\"";
-	exec("sudo -u " . USUARIO_FTP . " " . RUTA_TERMINAL . " " .
-		SCRIPT_CREACION . " $parametros 2>&1", $lineasSalida,
-		$codigoSalida);
+	$parametros = '"' . $nombre . '" "' . $contrasena . '"';
+	$comando = "sudo -S " . RUTA_TERMINAL . " " .
+		SCRIPT_CREACION . " $parametros 2>&1";
+	exec($comando, $lineasSalida, $codigoSalida);
 	$json["mensaje"] = "Script ejecutado.";
 	$json["codigoSalida"] = $codigoSalida;
 	$json["mensajesTerminal"] = implode("<br />", $lineasSalida);

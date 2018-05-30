@@ -9,6 +9,7 @@ fi
 
 # CONSTANTES.
 USUARIO="vsftpd"
+GRUPO="ftp"
 DIRECTORIO_FTP_USUARIO="/home/$USUARIO/ftp"
 DIRECTORIO_PUBLICO="$DIRECTORIO_FTP_USUARIO/public"
 DIRECTORIO_VSFTPD="/etc/vsftpd"
@@ -42,8 +43,18 @@ fi
 # Sobreborrar archivo de pam.
 cat "$ARCHIVO_PAM_NUEVO" > "$ARCHIVO_PAM_VIEJO"
 
+# Crear grupo para dar permiso de edicion sobre archivos.
+groupadd "$GRUPO"
+
 # Crear usuario local para que usuarios virtuales puedan acceder.
 useradd --home "/home/$USUARIO" --gid nogroup -m --shell /bin/false "$USUARIO"
+
+# Agregar usuario creado a grupo.
+usermod -a -G "$GRUPO" "$USUARIO"
+
+# Permitir a grupo leer y escribir en archivo de contraseñas.
+chgrp "$GRUPO" "$ARCHIVO_CONTRASENAS"
+chmod g+rw "$ARCHIVO_CONTRASENAS"
 
 # Crear folder por defecto en donde poner archivos.
 mkdir "$DIRECTORIO_FTP_USUARIO"
@@ -51,6 +62,10 @@ mkdir "$DIRECTORIO_PUBLICO"
 
 # Crear folder de configuracion de usuarios virtuales.
 mkdir "$DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES"
+
+# Permitir a grupo leer y escribir en folder de configuracion de ftp.
+chgrp "$GRUPO" "$DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES"
+chmod g+rw "$DIRECTORIO_CONFIGURACION_USUARIOS_VIRTUALES"
 
 # Crear directorio ejemplo para usuario ejemplo junto con archivo con ruta a
 # directorio ejemplo.
