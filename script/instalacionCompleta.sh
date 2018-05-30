@@ -11,7 +11,7 @@ fi
 
 # Correr todos los archivos en secuencia.
 directorioOriginal="$PWD"
-cd "../ftp/"
+cd "../ftp/instalacion/"
 bash "instalacionFTP.sh"
 cd "$directorioOriginal"
 cd "../ftp/config/"

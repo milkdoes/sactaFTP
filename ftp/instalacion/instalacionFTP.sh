@@ -13,10 +13,10 @@ fi
 apt-get update
 
 # Instalar **servidor LAMP**.
-apt-get install lamp-server^
+apt-get install -y lamp-server^
 
 # Instalar paquetes con uso de **vsftpd**.
-apt-get install vsftpd*
+apt-get install -y vsftpd*
 
 # Instalar paquetes para uso de usuarios virtuales.
-apt-get install libpam-pwdfile
+apt-get install -y libpam-pwdfile
