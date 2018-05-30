@@ -4,12 +4,39 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+// CONSTANTES.
+define("USUARIO_FTP", "vsftpd");
+define("RUTA_TERMINAL", "/bin/bash");
+define("SCRIPT_CREACION", "creacionUsuarioVirtual.sh");
+
 //Recibir valores de POST
 $nombre = $_POST['nombre'];
 $contrasena = $_POST['pass1'];
 
-//Debugging
-echo $nombre . " " . $contrasena;
+// Definir si la lista de parametros enviados son validos.
+$parametrosValidos = empty($nombre) == false && empty($contrasena) == false;
 
-//header('Location: ../../home.php');
+// Definir json a retornar.
+$json = array(
+	"mensaje" => "Error al enviar parametros."
+	, "codigoSalida" => 1
+	, "parametrosEnviados" => json_encode($_REQUEST)
+	, "mensajesTerminal" => array()
+);
+
+// Continuar creando/reemplazando usuario virtual si los parametros a usar son
+// validos.
+if ($parametrosValidos) {
+	// Ejecutar creacion/reemplazo de usuario.
+	$parametros = "\"$usuario\" \"$contrasena\"";
+	exec("sudo -u " . USUARIO_FTP . " " . RUTA_TERMINAL . " " .
+		SCRIPT_CREACION . " $parametros 2>&1", $lineasSalida,
+		$codigoSalida);
+	$json["mensaje"] = "Script ejecutado.";
+	$json["codigoSalida"] = $codigoSalida;
+	$json["mensajesTerminal"] = implode("<br />", $lineasSalida);
+}
+
+// Desplegar json.
+echo json_encode($json);
 ?> 
