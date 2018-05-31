@@ -11,7 +11,7 @@ if (session_status() == PHP_SESSION_NONE) {
 		<link rel="shortcut icon" href="img/logoSACTA_64x64.ico" type="image/x-icon"/>
 		<meta charset="utf-8">
 		<!-- Importar iconos de google.-->
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link type="text/css" rel="stylesheet" href="css/material-icons.css"/>
 		<!-- Importar materialize.css-->
 		<link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
 		<!-- Dejar que el navegador sepa que el sitio web está optimizado para dispositivos móviles. -->
