@@ -32,7 +32,7 @@ $arrayDir = explode("/", $directorio);
 
 //Descargar archivo
 $archivos = $_POST['archivos'];
-$arrayArchivos = explode("-", $archivos);
+$arrayArchivos = explode("@.@", $archivos);
 array_pop($arrayArchivos);
 
 $carpeta = 0;

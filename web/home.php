@@ -409,17 +409,11 @@ $pass = $_SESSION['ftp_pass'];
 				sLen = arrayElementosChecked.length;
 				for (i = 0; i < sLen; i++) {
 			    	archivos += arrayElementosChecked[i];
-			    	archivos += "-";
+			    	archivos += "@.@";
 				}
 				document.getElementById("dirDescarga").value = dirActual;
 				document.getElementById("archivos").value = archivos;
 				document.getElementById("descargarArchivos").submit();
-				// $.post("script/data/descargarArchivos.php", { archivos: arrayElementosChecked, dir: dirActual }).done(function(data, status){
-				// 	// $("#divArchivos").empty();
-				// 	// $("#divArchivos").append(data);
-				// 	console.log("Entra");
-				// 	location.reload();
-				// });
 			}
 
 			function borrarArchivos(){
