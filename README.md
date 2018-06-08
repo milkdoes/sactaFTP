@@ -1,5 +1,5 @@
 # "SACTA Sistema Avanzado de Comunicación y Transferencia de Archivos"
-## Modulo FTP
+Modulo FTP con interfaz web.
 
 Instituto Tecnologico de Tijuana\
 Subdirección Académica\
